@@ -1,0 +1,10 @@
+version: '2.3'
+services:
+  database:
+    image: postgres:12.2-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: deck
+      POSTGRES_USER: deck
+      POSTGRES_PASSWORD: deck
