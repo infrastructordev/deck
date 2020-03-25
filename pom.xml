@@ -206,7 +206,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>
-                                ${project.basedir}
+                                ${project.basedir}/docs
                             </outputDirectory>
                             <resources>
                                 <resource>
