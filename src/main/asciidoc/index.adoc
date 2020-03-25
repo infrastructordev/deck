@@ -4,14 +4,14 @@
 
 === Login
 .request
-include::{snippets}/user-login/request-body.adoc
+include::{snippets}/user-login/http-request.adoc[]
 
 .response
-include::{snippets}/user-login/response-body.adoc
+include::{snippets}/user-login/http-response.adoc[]
 
 === Logout
 .request
-include::{snippets}/user-logout/request-body.adoc
+include::{snippets}/user-logout/http-request.adoc[]
 
 .response
-include::{snippets}/user-logout/response-body.adoc
+include::{snippets}/user-logout/http-response.adoc[]
