@@ -3,15 +3,28 @@
 == User
 
 === Login
-.request
+Authenticate as a user.
+
+.Request
 include::{snippets}/user-login/http-request.adoc[]
 
-.response
+.Response
 include::{snippets}/user-login/http-response.adoc[]
 
+=== Get Current
+Get authenticated user details.
+
+.Request
+include::{snippets}/user-get-me/http-request.adoc[]
+
+.Response
+include::{snippets}/user-get-me/http-response.adoc[]
+
 === Logout
-.request
+Logout as a user.
+
+.Request
 include::{snippets}/user-logout/http-request.adoc[]
 
-.response
+.Response
 include::{snippets}/user-logout/http-response.adoc[]

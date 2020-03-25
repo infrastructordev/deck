@@ -1,4 +1,4 @@
-package dev.infrastructr.deck.data.models;
+package dev.infrastructr.deck.data.entities;
 
 public class TestUser {
 

@@ -1,14 +1,9 @@
 package dev.infrastructr.deck.security;
 
 import dev.infrastructr.deck.WebTestBase;
-import dev.infrastructr.deck.data.models.Organization;
-import dev.infrastructr.deck.data.models.User;
-import io.restassured.http.Cookie;
+import dev.infrastructr.deck.data.entities.User;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Value;
 
-import static dev.infrastructr.deck.data.builders.OrganizationBuilder.organization;
-import static dev.infrastructr.deck.data.builders.UserBuilder.user;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.OK;
@@ -16,18 +11,9 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 public class AuthenticationTest extends WebTestBase {
 
-    @Value("${dev.infrastructr.deck.security.remember-me.cookie}")
-    private String cookie;
-
-    private static final String PASSWORD = "123456";
-
-    private static final boolean ACCOUNT_ENABLED = true;
-
-    private static final boolean ACCOUNT_DISABLED = false;
-
     @Test
     public void shouldAuthenticateWithProperCredentials(){
-        User user = getUser(PASSWORD, ACCOUNT_ENABLED);
+        User user = user(PASSWORD);
 
         given(documentationSpec)
             .filter(getDocument("user-login"))
@@ -45,7 +31,7 @@ public class AuthenticationTest extends WebTestBase {
 
     @Test
     public void shouldNotAuthenticateWithBadPassword(){
-        User user = getUser(PASSWORD, ACCOUNT_ENABLED);
+        User user = user(PASSWORD);
 
         given(documentationSpec)
             .auth().none()
@@ -62,7 +48,7 @@ public class AuthenticationTest extends WebTestBase {
 
     @Test
     public void shouldNotAuthenticateDisabled(){
-        User user = getUser(PASSWORD, ACCOUNT_DISABLED);
+        User user = user(PASSWORD, ACCOUNT_DISABLED);
 
         given(documentationSpec)
             .filter(getDocument("user-login-unauthorized"))
@@ -80,38 +66,17 @@ public class AuthenticationTest extends WebTestBase {
 
     @Test
     public void shouldLogout(){
+        User user = user(PASSWORD);
+
         given(documentationSpec)
             .filter(getDocument("user-logout"))
             .auth().none()
-            .cookie(authenticate())
+            .cookie(authenticate(user))
         .when()
             .post("/users/logout")
         .then()
             .statusCode(is(OK.value()))
             .and()
             .cookie(cookie, emptyOrNullString());
-    }
-
-    private Cookie authenticate(){
-        User user = getUser(PASSWORD, ACCOUNT_DISABLED);
-
-        return given()
-            .auth().none()
-            .formParam("username", user.getName())
-            .formParam("password", PASSWORD)
-            .when()
-            .post("/users/login")
-            .then()
-            .extract()
-            .detailedCookie(cookie);
-    }
-
-    private User getUser(String password, boolean enabled){
-        Organization organization = entityManager.persist(organization().build());
-        return entityManager.persist(user()
-            .withOrganization(organization)
-            .withEnabled(enabled)
-            .withPassword(password)
-            .build());
     }
 }

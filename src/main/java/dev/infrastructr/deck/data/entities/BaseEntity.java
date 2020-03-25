@@ -1,4 +1,4 @@
-package dev.infrastructr.deck.data.models;
+package dev.infrastructr.deck.data.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCod
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Model {
+public class BaseEntity {
 
     @Override
     public String toString() {

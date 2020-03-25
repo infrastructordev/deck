@@ -1,8 +1,8 @@
-package dev.infrastructr.deck.security.services;
+package dev.infrastructr.deck.security.providers;
 
-import dev.infrastructr.deck.data.models.User;
+import dev.infrastructr.deck.data.entities.User;
 import dev.infrastructr.deck.data.repositories.UserRepository;
-import dev.infrastructr.deck.security.mappers.UserAuthDetailsMapper;
+import dev.infrastructr.deck.security.mappers.UserDetailsMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,18 +13,18 @@ import java.util.Optional;
 import static java.text.MessageFormat.format;
 
 @Service
-public class AuthDetailsService implements UserDetailsService {
+public class RepositoryBackedUserDetailsProvider implements UserDetailsService {
 
     private UserRepository userRepository;
 
-    private UserAuthDetailsMapper userAuthDetailsMapper;
+    private UserDetailsMapper userDetailsMapper;
 
-    public AuthDetailsService(
+    public RepositoryBackedUserDetailsProvider(
         UserRepository userRepository,
-       UserAuthDetailsMapper userAuthDetailsMapper
+        UserDetailsMapper userDetailsMapper
     ){
         this.userRepository = userRepository;
-        this.userAuthDetailsMapper = userAuthDetailsMapper;
+        this.userDetailsMapper = userDetailsMapper;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class AuthDetailsService implements UserDetailsService {
         if (user.isEmpty()) {
             throw new UsernameNotFoundException(format("User with name {0} not found.", name));
         }
-        return userAuthDetailsMapper.map(user.get());
+        return userDetailsMapper.map(user.get());
     }
 }
 

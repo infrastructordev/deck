@@ -1,13 +1,11 @@
 package dev.infrastructr.deck.security.mappers;
 
-import dev.infrastructr.deck.data.models.Role;
-import dev.infrastructr.deck.data.models.User;
-import dev.infrastructr.deck.security.models.AuthDetails;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import dev.infrastructr.deck.data.entities.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,14 +14,17 @@ import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
-@Mapper
-public abstract class UserAuthDetailsMapper {
+@Service
+public class UserDetailsMapper {
 
-    @Mapping(target = "username", source = "name")
-    @Mapping(target = "authorities", source = "roles", qualifiedByName = "mapRolesToAuthorities")
-    public abstract AuthDetails map(User user);
+    public UserDetails map(dev.infrastructr.deck.data.entities.User user){
+        return User.withUsername(user.getName())
+            .password(user.getPassword())
+            .disabled(!user.isEnabled())
+            .authorities(map(user.getRoles()))
+            .build();
+    }
 
-    @Named("mapRolesToAuthorities")
     Collection<? extends GrantedAuthority> map(List<Role> roles){
         if (isEmpty(roles)) {
             return emptySet();

@@ -1,6 +1,6 @@
 package dev.infrastructr.deck.data.repositories;
 
-import dev.infrastructr.deck.data.models.User;
+import dev.infrastructr.deck.data.entities.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.repository.CrudRepository;
 

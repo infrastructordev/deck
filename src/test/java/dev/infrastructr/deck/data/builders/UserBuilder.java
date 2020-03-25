@@ -1,9 +1,9 @@
 package dev.infrastructr.deck.data.builders;
 
 import dev.infrastructr.deck.DataFaker;
-import dev.infrastructr.deck.data.models.Organization;
-import dev.infrastructr.deck.data.models.Role;
-import dev.infrastructr.deck.data.models.User;
+import dev.infrastructr.deck.data.entities.Organization;
+import dev.infrastructr.deck.data.entities.Role;
+import dev.infrastructr.deck.data.entities.User;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package dev.infrastructr.deck.data.builders;
 
 import dev.infrastructr.deck.DataFaker;
-import dev.infrastructr.deck.data.models.Organization;
+import dev.infrastructr.deck.data.entities.Organization;
 
 public class OrganizationBuilder {
 

@@ -440,46 +440,86 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_login">Login</h3>
+<div class="paragraph">
+<p>Authenticate as a user.</p>
+</div>
 <div class="listingblock">
-<div class="title">request</div>
+<div class="title">Request</div>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /users/login HTTP/1.1
 Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1
 Host: api.infrastructr.dev
 
-username=regina.kutch&amp;password=123456</code></pre>
+username=willodean.greenfelder&amp;password=123456</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">response</div>
+<div class="title">Response</div>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Set-Cookie: INFRASTRUCTR_DECK_PID=cmVnaW5hLmt1dGNoOjE1ODU3NzQwNTE0MzA6YzJjMzIyYjdkMDcyNWRkYzgyODVkYjUwN2Y5NmVhYmE; Max-Age=604800; Expires=Wed, 01-Apr-2020 20:47:31 GMT; Path=/; HttpOnly
+Set-Cookie: INFRASTRUCTR_DECK_PID=d2lsbG9kZWFuLmdyZWVuZmVsZGVyOjE1ODU3Nzk5Mzg4ODA6ZmZkZmY3OTliODFkMGMzZjcxNGU3YmIxZjc1NDhmZTk; Max-Age=604800; Expires=Wed, 01-Apr-2020 22:25:38 GMT; Path=/; HttpOnly
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Date: Wed, 25 Mar 2020 20:47:30 GMT
+Date: Wed, 25 Mar 2020 22:25:38 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_logout">Logout</h3>
+<h3 id="_get_current">Get Current</h3>
+<div class="paragraph">
+<p>Get authenticated user details.</p>
+</div>
 <div class="listingblock">
-<div class="title">request</div>
+<div class="title">Request</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /users/me HTTP/1.1
+Host: api.infrastructr.dev
+Cookie: INFRASTRUCTR_DECK_PID=bGluZXR0ZS5saXR0ZWw6MTU4NTc3OTkzNjExNzo3MjcyYzI3MzU5YjFlNjM2M2ViNTM5YzU5MWUyMDQ1Yg</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Response</div>
+<div class="content">
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Wed, 25 Mar 2020 22:25:36 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+Content-Length: 175
+
+{"id":"028669a0-3e10-42e4-881b-8596b52d8ee5","name":"linette.littel","organization":{"id":"28f9930c-b0d2-45dc-8b78-bc93da5cf1ec","name":"O'Connell-Reichel"},"roles":["OWNER"]}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logout">Logout</h3>
+<div class="paragraph">
+<p>Logout as a user.</p>
+</div>
+<div class="listingblock">
+<div class="title">Request</div>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /users/logout HTTP/1.1
 Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1
 Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=</code></pre>
+Cookie: INFRASTRUCTR_DECK_PID=ZmVyZGluYW5kLmJhdWNoOjE1ODU3Nzk5MzgwODU6ZDY5MjI5NGRiOWNmYTkwZTI0YmRkYmE3ZmIzNWQzMzg</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">response</div>
+<div class="title">Response</div>
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
 Set-Cookie: INFRASTRUCTR_DECK_PID=; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
@@ -490,7 +530,7 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Date: Wed, 25 Mar 2020 20:47:30 GMT
+Date: Wed, 25 Mar 2020 22:25:38 GMT
 Keep-Alive: timeout=60
 Connection: keep-alive</code></pre>
 </div>
@@ -501,7 +541,7 @@ Connection: keep-alive</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-03-25 21:46:33 +0100
+Last updated 2020-03-25 23:25:03 +0100
 </div>
 </div>
 </body>

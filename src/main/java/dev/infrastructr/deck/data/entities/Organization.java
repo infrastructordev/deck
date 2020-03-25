@@ -1,4 +1,4 @@
-package dev.infrastructr.deck.data.models;
+package dev.infrastructr.deck.data.entities;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -9,7 +9,7 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table(name = "organizations")
-public class Organization extends Model {
+public class Organization extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)

@@ -1,4 +1,4 @@
-package dev.infrastructr.deck.data.models;
+package dev.infrastructr.deck.data.entities;
 
 import org.hibernate.annotations.Type;
 
@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table(name = "users")
-public class User extends Model {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)
