@@ -7,6 +7,10 @@
 # Deck API
 Infrastructr Deck API.
 
+## Docs
+
+API documentation may be found at http://docs.deck-api.infrastructr.dev.
+
 ## Prerequisites
 
 - OpenJDK 11
