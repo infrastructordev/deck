@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Adds foreign keys to table 'users'.
+      changes:
+        - addForeignKeyConstraint :
+            baseTableName: users
+            baseColumnNames: organization_id
+            constraintName: fk_users_organization_id_organizations_id
+            referencedTableName: organizations
+            referencedColumnNames: id

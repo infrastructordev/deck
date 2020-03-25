@@ -8,3 +8,12 @@ services:
       POSTGRES_DB: deck
       POSTGRES_USER: deck
       POSTGRES_PASSWORD: deck
+  database-admin:
+    image: dpage/pgadmin4:4.19
+    volumes:
+      - ./.docker/database-admin/servers.json:/pgadmin4/servers.json:ro
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - '2345:80'

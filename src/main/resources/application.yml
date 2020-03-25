@@ -1,0 +1,32 @@
+server.port: 8080
+
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/deck?connectTimeout=3&socketTimeout=30
+    username: deck
+    password: deck
+    hikari:
+      connection-timeout: 3000
+      validation-timeout: 1000
+  jpa:
+    show-sql: false
+    properties:
+      hibernate.show_sql: false
+  liquibase:
+    change-log: classpath:database/main.yml
+
+dev:
+  infrastructr:
+    deck:
+      security:
+        remember-me:
+          key: secret
+          cookie: INFRASTRUCTR_DECK_PID
+          expiry: 604800
+          https-only: false
+        request-mapping:
+          login-url: /users/login
+          logout-url: /users/logout

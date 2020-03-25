@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: database/v1/main.yml

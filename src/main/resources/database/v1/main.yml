@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: database/v1/schema/organizations.yml
+  - include:
+      file: database/v1/schema/users.yml
+  - include:
+      file: database/v1/schema/users_fk.yml
