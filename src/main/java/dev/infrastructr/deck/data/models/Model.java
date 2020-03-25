@@ -8,7 +8,7 @@ import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCod
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Entity {
+public class Model {
 
     @Override
     public String toString() {

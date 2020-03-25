@@ -14,7 +14,7 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends Model {
 
     @Id
     @GeneratedValue(strategy = AUTO)

@@ -9,7 +9,7 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table(name = "organizations")
-public class Organization {
+public class Organization extends Model {
 
     @Id
     @GeneratedValue(strategy = AUTO)
