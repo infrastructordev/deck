@@ -8,6 +8,13 @@ env:
 cache:
   directories:
     - $HOME/.m2
+
+before_script:
+  - docker-compose up -d
+
+after_script:
+  - docker-compose down
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - docker build . -t "$IMAGE_NAME:$TRAVIS_BRANCH" -t "$IMAGE_NAME:latest"
