@@ -1,11 +1,17 @@
-= Getting Started With Spring REST Docs
+= Infrastructr Deck API
 
-This is an example output for a service running at http://localhost:8080:
+== User
 
+=== Login
 .request
-include::{snippets}/home/http-request.adoc[]
+include::{snippets}/user-login/request-body.adoc
 
 .response
-include::{snippets}/home/http-response.adoc[]
+include::{snippets}/user-login/response-body.adoc
 
-As you can see the format is very simple, and in fact you always get the same message.
+=== Logout
+.request
+include::{snippets}/user-logout/request-body.adoc
+
+.response
+include::{snippets}/user-logout/response-body.adoc

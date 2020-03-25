@@ -29,7 +29,8 @@ public class AuthenticationTest extends WebTestBase {
     public void shouldAuthenticateWithProperCredentials(){
         User user = getUser(PASSWORD, ACCOUNT_ENABLED);
 
-        given()
+        given(documentationSpec)
+            .filter(getDocument("user-login"))
             .auth().none()
             .formParam("username", user.getName())
             .formParam("password", PASSWORD)
@@ -46,7 +47,7 @@ public class AuthenticationTest extends WebTestBase {
     public void shouldNotAuthenticateWithBadPassword(){
         User user = getUser(PASSWORD, ACCOUNT_ENABLED);
 
-        given()
+        given(documentationSpec)
             .auth().none()
             .formParam("username", user.getName())
             .formParam("password", "secret")
@@ -63,7 +64,8 @@ public class AuthenticationTest extends WebTestBase {
     public void shouldNotAuthenticateDisabled(){
         User user = getUser(PASSWORD, ACCOUNT_DISABLED);
 
-        given()
+        given(documentationSpec)
+            .filter(getDocument("user-login-unauthorized"))
             .auth().none()
             .formParam("username", user.getName())
             .formParam("password", "secret")
@@ -78,7 +80,8 @@ public class AuthenticationTest extends WebTestBase {
 
     @Test
     public void shouldLogout(){
-        given()
+        given(documentationSpec)
+            .filter(getDocument("user-logout"))
             .auth().none()
             .cookie(authenticate())
         .when()

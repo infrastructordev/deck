@@ -3,6 +3,7 @@ package dev.infrastructr.deck;
 import dev.infrastructr.deck.data.TransactionalEntityManager;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.Filter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static io.restassured.filter.log.LogDetail.ALL;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -42,5 +46,13 @@ public class WebTestBase {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(ALL);
         this.documentationSpec = new RequestSpecBuilder()
             .addFilter(documentationConfiguration(restDocumentation)).build();
+    }
+
+    protected Filter getDocument(String documentId){
+        return document(documentId,
+            preprocessRequest(modifyUris()
+                 .scheme("https")
+                .host("api.infrastructr.dev")
+                .removePort()));
     }
 }
