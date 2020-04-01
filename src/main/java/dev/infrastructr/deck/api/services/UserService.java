@@ -1,39 +1,26 @@
 package dev.infrastructr.deck.api.services;
 
 import dev.infrastructr.deck.api.entities.User;
-import dev.infrastructr.deck.api.exceptions.NotFoundException;
-import dev.infrastructr.deck.data.repositories.UserRepository;
 import dev.infrastructr.deck.api.mappers.UserMapper;
-import dev.infrastructr.deck.security.providers.ContextBackedUserDetailsProvider;
-import org.springframework.security.core.userdetails.UserDetails;
+import dev.infrastructr.deck.security.providers.CurrentUserProvider;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-
     private UserMapper userMapper;
 
-    private ContextBackedUserDetailsProvider contextBackedUserDetailsProvider;
+    private CurrentUserProvider currentUserProvider;
 
     public UserService(
-        UserRepository userRepository,
         UserMapper userMapper,
-        ContextBackedUserDetailsProvider contextBackedUserDetailsProvider
+        CurrentUserProvider currentUserProvider
     ){
-        this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.contextBackedUserDetailsProvider = contextBackedUserDetailsProvider;
+        this.currentUserProvider = currentUserProvider;
     }
 
     public User getCurrentUser(){
-        UserDetails userDetails = contextBackedUserDetailsProvider.getCurrent()
-            .orElseThrow(NotFoundException::new);
-
-        return userMapper.map(
-            userRepository.findByNameIgnoreCase(userDetails.getUsername())
-            .orElseThrow(NotFoundException::new)
-        );
+        return userMapper.map(currentUserProvider.getCurrentUser());
     }
 }

@@ -1,10 +1,12 @@
-package dev.infrastructr.deck.api;
+package dev.infrastructr.deck.api.controllers;
 
 import dev.infrastructr.deck.WebTestBase;
+import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.data.entities.Organization;
 import dev.infrastructr.deck.data.entities.Role;
 import dev.infrastructr.deck.data.entities.User;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 
@@ -14,15 +16,18 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class UserControllerTest extends WebTestBase {
 
+    @Autowired
+    private UserActions userActions;
+
     @Test
-    public void shouldReturnUser(){
-        User user = user(PASSWORD);
+    public void shouldReturn(){
+        User user = userActions.create();
         Organization organization = user.getOrganization();
 
         given(documentationSpec)
             .filter(getDocument("user-get-me"))
             .auth().none()
-            .cookie(authenticate(user))
+            .cookie(userActions.authenticate(user))
         .when()
             .get("/users/me")
         .then()

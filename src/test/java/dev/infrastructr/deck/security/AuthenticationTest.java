@@ -1,9 +1,13 @@
 package dev.infrastructr.deck.security;
 
 import dev.infrastructr.deck.WebTestBase;
+import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.data.entities.User;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import static dev.infrastructr.deck.api.actions.UserActions.ACCOUNT_DISABLED;
+import static dev.infrastructr.deck.api.actions.UserActions.PASSWORD;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpStatus.OK;
@@ -11,9 +15,12 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 public class AuthenticationTest extends WebTestBase {
 
+    @Autowired
+    private UserActions userActions;
+
     @Test
     public void shouldAuthenticateWithProperCredentials(){
-        User user = user(PASSWORD);
+        User user = userActions.create(PASSWORD);
 
         given(documentationSpec)
             .filter(getDocument("user-login"))
@@ -26,12 +33,12 @@ public class AuthenticationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .cookie(cookie, not(emptyOrNullString()));
+            .cookie(userActions.getCookie(), not(emptyOrNullString()));
     }
 
     @Test
     public void shouldNotAuthenticateWithBadPassword(){
-        User user = user(PASSWORD);
+        User user = userActions.create(PASSWORD);
 
         given(documentationSpec)
             .auth().none()
@@ -43,12 +50,12 @@ public class AuthenticationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(UNAUTHORIZED.value()))
             .and()
-            .cookie(cookie, emptyOrNullString());
+            .cookie(userActions.getCookie(), emptyOrNullString());
     }
 
     @Test
     public void shouldNotAuthenticateDisabled(){
-        User user = user(PASSWORD, ACCOUNT_DISABLED);
+        User user = userActions.create(PASSWORD, ACCOUNT_DISABLED);
 
         given(documentationSpec)
             .filter(getDocument("user-login-unauthorized"))
@@ -61,22 +68,22 @@ public class AuthenticationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(UNAUTHORIZED.value()))
             .and()
-            .cookie(cookie, emptyOrNullString());
+            .cookie(userActions.getCookie(), emptyOrNullString());
     }
 
     @Test
     public void shouldLogout(){
-        User user = user(PASSWORD);
+        User user = userActions.create(PASSWORD);
 
         given(documentationSpec)
             .filter(getDocument("user-logout"))
             .auth().none()
-            .cookie(authenticate(user))
+            .cookie(userActions.authenticate(user))
         .when()
             .post("/users/logout")
         .then()
             .statusCode(is(OK.value()))
             .and()
-            .cookie(cookie, emptyOrNullString());
+            .cookie(userActions.getCookie(), emptyOrNullString());
     }
 }

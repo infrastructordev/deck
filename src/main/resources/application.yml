@@ -30,3 +30,4 @@ dev:
         request-mapping:
           login-url: /users/login
           logout-url: /users/logout
+

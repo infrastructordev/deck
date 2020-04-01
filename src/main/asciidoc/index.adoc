@@ -28,3 +28,61 @@ include::{snippets}/user-logout/http-request.adoc[]
 
 .Response
 include::{snippets}/user-logout/http-response.adoc[]
+
+== Project
+
+=== Create
+Create a project.
+
+.Request
+include::{snippets}/project-create/http-request.adoc[]
+
+.Response
+include::{snippets}/project-create/http-response.adoc[]
+
+=== Get by Id
+Get a project by id.
+
+.Request
+include::{snippets}/project-get-by-id/http-request.adoc[]
+
+.Response
+include::{snippets}/project-get-by-id/http-response.adoc[]
+
+=== Get All
+Get all projects available to the user.
+
+.Request
+include::{snippets}/project-get-all/http-request.adoc[]
+
+.Response
+include::{snippets}/project-get-all/http-response.adoc[]
+
+== Host
+
+=== Create
+Create a host.
+
+.Request
+include::{snippets}/host-create/http-request.adoc[]
+
+.Response
+include::{snippets}/host-create/http-response.adoc[]
+
+=== Get by Id
+Get a host by id.
+
+.Request
+include::{snippets}/host-get-by-id/http-request.adoc[]
+
+.Response
+include::{snippets}/host-get-by-id/http-response.adoc[]
+
+=== Get Project Hosts
+Get all hosts attached to the current project.
+
+.Request
+include::{snippets}/host-get-by-project-id/http-request.adoc[]
+
+.Response
+include::{snippets}/host-get-by-project-id/http-response.adoc[]

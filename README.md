@@ -9,7 +9,7 @@ Infrastructr Deck API.
 
 ## Docs
 
-API documentation may be found at https://docs.deck-api.infrastructr.dev.
+API documentation may be found at [docs.deck-api.infrastructr.dev](https://docs.deck-api.infrastructr.dev).
 
 ## Prerequisites
 
