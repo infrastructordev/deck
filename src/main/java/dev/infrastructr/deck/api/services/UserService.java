@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    private CurrentUserProvider currentUserProvider;
+    private final CurrentUserProvider currentUserProvider;
 
     public UserService(
         UserMapper userMapper,

@@ -15,9 +15,9 @@ import static java.text.MessageFormat.format;
 @Service
 public class RepositoryBackedUserDetailsProvider implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private UserDetailsMapper userDetailsMapper;
+    private final UserDetailsMapper userDetailsMapper;
 
     public RepositoryBackedUserDetailsProvider(
         UserRepository userRepository,

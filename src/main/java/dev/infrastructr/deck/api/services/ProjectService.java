@@ -16,13 +16,13 @@ import java.util.UUID;
 @Service
 public class ProjectService {
 
-    private CurrentUserProvider currentUserProvider;
+    private final CurrentUserProvider currentUserProvider;
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    private ProjectMapper projectMapper;
+    private final ProjectMapper projectMapper;
 
-    private ProjectAuthorizer projectAuthorizer;
+    private final ProjectAuthorizer projectAuthorizer;
 
     public ProjectService(
         CurrentUserProvider currentUserProvider,

@@ -15,13 +15,13 @@ import java.util.UUID;
 @Service
 public class HostService {
 
-    private HostRepository hostRepository;
+    private final HostRepository hostRepository;
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
-    private HostMapper hostMapper;
+    private final HostMapper hostMapper;
 
-    private HostAuthorizer hostAuthorizer;
+    private final HostAuthorizer hostAuthorizer;
 
     public HostService(
         HostRepository hostRepository,

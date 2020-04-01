@@ -15,9 +15,9 @@ import static java.text.MessageFormat.format;
 @Service
 public class ProjectAuthorizer {
 
-    private CurrentUserProvider currentUserProvider;
+    private final CurrentUserProvider currentUserProvider;
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
     public ProjectAuthorizer(
         CurrentUserProvider currentUserProvider,

@@ -28,4 +28,4 @@ API documentation may be found at [docs.deck-api.infrastructr.dev](https://docs.
 
 ## License
 
-See the [LICENSE.md](LICENSE.md) file for details
+See the [LICENSE](LICENSE) file for details

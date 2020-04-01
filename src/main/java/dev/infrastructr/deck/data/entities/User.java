@@ -3,7 +3,6 @@ package dev.infrastructr.deck.data.entities;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 
 import java.util.List;
 import java.util.UUID;

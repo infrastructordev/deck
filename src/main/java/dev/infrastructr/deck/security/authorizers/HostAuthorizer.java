@@ -11,9 +11,9 @@ import java.util.UUID;
 @Service
 public class HostAuthorizer {
 
-    private ProjectAuthorizer projectAuthorizer;
+    private final ProjectAuthorizer projectAuthorizer;
 
-    private HostRepository hostRepository;
+    private final HostRepository hostRepository;
 
     public HostAuthorizer(
         ProjectAuthorizer projectAuthorizer,

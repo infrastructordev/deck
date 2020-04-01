@@ -1,7 +1,6 @@
 package dev.infrastructr.deck.data.entities;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 
 import java.util.UUID;
 

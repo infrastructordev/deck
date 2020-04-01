@@ -8,6 +8,7 @@ import dev.infrastructr.deck.data.entities.User;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -19,7 +20,7 @@ public class UserBuilder {
 
     private String password = DataFaker.getInstance().crypto().md5();
 
-    private List<Role> roles = asList(Role.OWNER);
+    private List<Role> roles = singletonList(Role.OWNER);
 
     private Organization organization;
 

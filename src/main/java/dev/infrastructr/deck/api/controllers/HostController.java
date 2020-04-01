@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 public class HostController {
 
-    private HostService hostService;
+    private final HostService hostService;
 
     public HostController(HostService hostService){
         this.hostService = hostService;

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class CurrentUserProvider {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private ContextBackedUserDetailsProvider contextBackedUserDetailsProvider;
+    private final ContextBackedUserDetailsProvider contextBackedUserDetailsProvider;
 
     public CurrentUserProvider(
         UserRepository userRepository,

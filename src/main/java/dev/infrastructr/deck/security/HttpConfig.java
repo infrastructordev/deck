@@ -18,11 +18,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class HttpConfig extends WebSecurityConfigurerAdapter {
 
-    private RememberMeProperties rememberMeProperties;
+    private final RememberMeProperties rememberMeProperties;
 
-    private RequestMappingProperties requestMappingProperties;
+    private final RequestMappingProperties requestMappingProperties;
 
-    private RememberMeServices rememberMeServices;
+    private final RememberMeServices rememberMeServices;
 
     public HttpConfig(
         RememberMeProperties rememberMeProperties,
