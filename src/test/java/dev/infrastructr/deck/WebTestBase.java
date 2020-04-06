@@ -1,5 +1,6 @@
 package dev.infrastructr.deck;
 
+import dev.infrastructr.deck.api.props.ApiCommonProps;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.Filter;
@@ -7,6 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +32,9 @@ public abstract class WebTestBase {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    protected ApiCommonProps apiCommonProps;
+
     @Rule
     public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
 
@@ -41,6 +46,7 @@ public abstract class WebTestBase {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails(ALL);
         this.documentationSpec = new RequestSpecBuilder()
             .addFilter(documentationConfiguration(restDocumentation)).build();
+        this.apiCommonProps.setBaseUrl("http://api.infrastructr.local:" + port);
     }
 
     protected Filter getDocument(String documentId){

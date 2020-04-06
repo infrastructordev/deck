@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @ConfigurationProperties(prefix = "dev.infrastructr.deck.security.remember-me")
-public class RememberMeProperties {
+public class SecurityRememberMeProps {
 
     private String key;
 

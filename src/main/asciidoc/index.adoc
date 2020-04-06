@@ -86,3 +86,43 @@ include::{snippets}/host-get-by-project-id/http-request.adoc[]
 
 .Response
 include::{snippets}/host-get-by-project-id/http-response.adoc[]
+
+== Host Init
+
+=== Create Host Init
+Create token and get host registration command for a particular host.
+
+.Request
+include::{snippets}/host-init-create/http-request.adoc[]
+
+.Response
+include::{snippets}/host-init-create/http-response.adoc[]
+
+=== Get Host Init
+Get init script to execute for a particular host.
+
+.Request
+include::{snippets}/host-init-get/http-request.adoc[]
+
+.Response
+include::{snippets}/host-init-get/http-response.adoc[]
+
+== Host Heartbeat
+
+=== Get Host Heartbeat
+Get current heartbeat script to execute for a particular host.
+
+.Request
+include::{snippets}/host-heartbeat-get/http-request.adoc[]
+
+.Response
+include::{snippets}/host-heartbeat-get/http-response.adoc[]
+
+=== Create Host Heartbeat
+Submit host heartbeat results.
+
+.Request
+include::{snippets}/host-heartbeat-create/http-request.adoc[]
+
+.Response
+include::{snippets}/host-heartbeat-create/http-response.adoc[]

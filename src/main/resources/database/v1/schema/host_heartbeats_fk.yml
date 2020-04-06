@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Adds foreign keys to table 'host_heartbeats'.
+      changes:
+        - addForeignKeyConstraint :
+            baseTableName: host_heartbeats
+            baseColumnNames: host_id
+            constraintName: fk_host_heartbeats_host_id_hosts_id
+            referencedTableName: hosts
+            referencedColumnNames: id

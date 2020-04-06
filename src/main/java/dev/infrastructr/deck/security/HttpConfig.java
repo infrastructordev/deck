@@ -4,8 +4,8 @@ import dev.infrastructr.deck.security.handlers.RestAuthenticationEntryPoint;
 import dev.infrastructr.deck.security.handlers.RestAuthenticationFailureHandler;
 import dev.infrastructr.deck.security.handlers.RestAuthenticationSuccessHandler;
 import dev.infrastructr.deck.security.handlers.RestLogoutSuccessHandler;
-import dev.infrastructr.deck.security.props.RememberMeProperties;
-import dev.infrastructr.deck.security.props.RequestMappingProperties;
+import dev.infrastructr.deck.security.props.SecurityRememberMeProps;
+import dev.infrastructr.deck.security.props.SecurityRequestMappingProps;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,19 +18,19 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class HttpConfig extends WebSecurityConfigurerAdapter {
 
-    private final RememberMeProperties rememberMeProperties;
+    private final SecurityRememberMeProps securityRememberMeProps;
 
-    private final RequestMappingProperties requestMappingProperties;
+    private final SecurityRequestMappingProps securityRequestMappingProps;
 
     private final RememberMeServices rememberMeServices;
 
     public HttpConfig(
-        RememberMeProperties rememberMeProperties,
-        RequestMappingProperties requestMappingProperties,
+        SecurityRememberMeProps securityRememberMeProps,
+        SecurityRequestMappingProps securityRequestMappingProps,
         RememberMeServices rememberMeServices
     ){
-        this.rememberMeProperties = rememberMeProperties;
-        this.requestMappingProperties = requestMappingProperties;
+        this.securityRememberMeProps = securityRememberMeProps;
+        this.securityRequestMappingProps = securityRequestMappingProps;
         this.rememberMeServices = rememberMeServices;
     }
 
@@ -46,13 +46,13 @@ public class HttpConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
         .and()
             .formLogin()
-            .loginProcessingUrl(requestMappingProperties.getLoginUrl())
+            .loginProcessingUrl(securityRequestMappingProps.getLogin())
             .successHandler(new RestAuthenticationSuccessHandler())
             .failureHandler(new RestAuthenticationFailureHandler())
         .and()
             .logout()
-            .deleteCookies(rememberMeProperties.getCookie())
-            .logoutUrl(requestMappingProperties.getLogoutUrl())
+            .deleteCookies(securityRememberMeProps.getCookie())
+            .logoutUrl(securityRequestMappingProps.getLogout())
             .logoutSuccessHandler(new RestLogoutSuccessHandler())
         .and()
             .sessionManagement()
@@ -60,7 +60,7 @@ public class HttpConfig extends WebSecurityConfigurerAdapter {
         .and()
             .rememberMe()
             .rememberMeServices(rememberMeServices)
-            .key(rememberMeProperties.getKey())
+            .key(securityRememberMeProps.getKey())
         .and()
             .httpBasic().disable()
             .csrf().disable();

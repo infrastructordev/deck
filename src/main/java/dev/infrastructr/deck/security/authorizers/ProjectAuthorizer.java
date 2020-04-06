@@ -4,7 +4,7 @@ import dev.infrastructr.deck.api.exceptions.NotFoundException;
 import dev.infrastructr.deck.data.entities.Project;
 import dev.infrastructr.deck.data.entities.User;
 import dev.infrastructr.deck.data.repositories.ProjectRepository;
-import dev.infrastructr.deck.security.exceptions.UnauthorizedException;
+import dev.infrastructr.deck.security.exceptions.ForbiddenException;
 import dev.infrastructr.deck.security.providers.CurrentUserProvider;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ public class ProjectAuthorizer {
         User user = currentUserProvider.getCurrentUser();
 
         if(!isUserAndProjectFromSameOrganization(user, project)){
-            throw new UnauthorizedException(
+            throw new ForbiddenException(
                 format("User {0} has no access to project {1}.", user.getId(), project.getId())
             );
         }

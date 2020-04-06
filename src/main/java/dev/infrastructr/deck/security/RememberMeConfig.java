@@ -1,6 +1,6 @@
 package dev.infrastructr.deck.security;
 
-import dev.infrastructr.deck.security.props.RememberMeProperties;
+import dev.infrastructr.deck.security.props.SecurityRememberMeProps;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,14 +16,14 @@ public class RememberMeConfig {
     @Bean
     public RememberMeServices tokenBasedRememberMeServices(
         UserDetailsService userDetailsService,
-        RememberMeProperties rememberMeProperties
+        SecurityRememberMeProps securityRememberMeProps
     ) {
         TokenBasedRememberMeServices rememberMeServices = new TokenBasedRememberMeServices(
-            rememberMeProperties.getKey(), userDetailsService);
+            securityRememberMeProps.getKey(), userDetailsService);
         rememberMeServices.setAlwaysRemember(true);
-        rememberMeServices.setTokenValiditySeconds(rememberMeProperties.getExpiry());
-        rememberMeServices.setUseSecureCookie(rememberMeProperties.isHttpsOnly());
-        rememberMeServices.setCookieName(rememberMeProperties.getCookie());
+        rememberMeServices.setTokenValiditySeconds(securityRememberMeProps.getExpiry());
+        rememberMeServices.setUseSecureCookie(securityRememberMeProps.isHttpsOnly());
+        rememberMeServices.setCookieName(securityRememberMeProps.getCookie());
         return rememberMeServices;
     }
 

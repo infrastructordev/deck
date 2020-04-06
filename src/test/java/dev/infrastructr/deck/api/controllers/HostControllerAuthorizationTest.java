@@ -15,10 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static dev.infrastructr.deck.api.builders.CreateHostRequestBuilder.createProjectRequest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
-public class HostControllerTest extends WebTestBase {
+public class HostControllerAuthorizationTest extends WebTestBase {
 
     @Autowired
     private UserActions userActions;
@@ -30,7 +29,7 @@ public class HostControllerTest extends WebTestBase {
     private HostActions hostActions;
 
     @Test
-    public void shouldCreate(){
+    public void shouldForbidCreateForUserFromDifferentOrganization(){
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
@@ -38,60 +37,56 @@ public class HostControllerTest extends WebTestBase {
             .withProjectId(project.getId())
             .build();
 
+        User userFromDifferentOrganization = userActions.create();
+
         given(documentationSpec)
-            .filter(getDocument("host-create"))
-            .cookie(cookie)
+            .filter(getDocument("host-create-forbidden"))
+            .cookie(userActions.authenticate(userFromDifferentOrganization))
             .body(request)
             .contentType("application/json")
         .when()
             .post("/projects/{projectId}/hosts", project.getId())
         .then()
             .assertThat()
-            .statusCode(is(OK.value()))
-            .and()
-            .body("id", is(notNullValue()))
-            .body("name", is(request.getName()));
+            .statusCode(is(FORBIDDEN.value()));
     }
 
     @Test
-    public void shouldGetByProjectId(){
+    public void shouldForbidGetByProjectIdForUserFromDifferentOrganization(){
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
-        Host host = hostActions.create(cookie, project.getId());
+
+        User userFromDifferentOrganization = userActions.create();
 
         given(documentationSpec)
-            .filter(getDocument("host-get-by-project-id"))
-            .cookie(userActions.authenticate(user))
+            .filter(getDocument("host-get-by-project-id-forbidden"))
+            .cookie(userActions.authenticate(userFromDifferentOrganization))
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}/hosts", project.getId())
         .then()
             .assertThat()
-            .statusCode(is(OK.value()))
-            .and()
-            .body("[0].id", is(notNullValue()))
-            .body("[0].name", is(host.getName()));
+            .statusCode(is(FORBIDDEN.value()));
     }
 
     @Test
-    public void shouldGetById(){
+    public void shouldForbidGetByIdForUserFromDifferentOrganization(){
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
         Host host = hostActions.create(cookie, project.getId());
 
+        User userFromDifferentOrganization = userActions.create();
+
         given(documentationSpec)
-            .filter(getDocument("host-get-by-id"))
-            .cookie(userActions.authenticate(user))
+            .filter(getDocument("host-get-by-id-forbidden"))
+            .cookie(userActions.authenticate(userFromDifferentOrganization))
             .contentType("application/json")
         .when()
             .get("/hosts/{hostId}", host.getId())
         .then()
             .assertThat()
-            .statusCode(is(OK.value()))
-            .and()
-            .body("id", is(notNullValue()))
-            .body("name", is(host.getName()));
+            .statusCode(is(FORBIDDEN.value()));
     }
 }

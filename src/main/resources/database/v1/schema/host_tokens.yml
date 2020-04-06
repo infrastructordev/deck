@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Creates table 'host_tokens'.
+      changes:
+        - createTable:
+            tableName: host_tokens
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: value
+                  type: text
+              - column:
+                  name: host_id
+                  type: uuid
+                  constraints:
+                    nullable: false

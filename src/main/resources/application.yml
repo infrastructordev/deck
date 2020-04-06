@@ -28,6 +28,10 @@ dev:
           expiry: 604800
           https-only: false
         request-mapping:
-          login-url: /users/login
-          logout-url: /users/logout
-
+          login: /users/login
+          logout: /users/logout
+      api:
+        base-url: "http://api.infrastructr.local:8080"
+        request-mapping:
+          host-init: /hosts/{0}/init
+          host-heartbeat: /hosts/{0}/heartbeat
