@@ -76,7 +76,6 @@ public class HostInitControllerTest extends WebTestBase {
 
         String hostInitScript = given(documentationSpec)
             .filter(getDocument("host-init-get"))
-            .cookie(userActions.authenticate(user))
         .when()
             .get("/hosts/{hostId}/init?hostToken={hostToken}", host.getId(), hostInit.getToken())
         .then()

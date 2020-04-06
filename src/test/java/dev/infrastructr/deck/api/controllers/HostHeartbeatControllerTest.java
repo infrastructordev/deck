@@ -60,7 +60,6 @@ public class HostHeartbeatControllerTest extends WebTestBase {
 
         String hostHeartbeatScript = given(documentationSpec)
             .filter(getDocument("host-heartbeat-get"))
-            .cookie(userActions.authenticate(user))
         .when()
             .get("/hosts/{hostId}/heartbeat?hostToken={hostToken}", host.getId(), hostInit.getToken())
         .then()
@@ -85,7 +84,6 @@ public class HostHeartbeatControllerTest extends WebTestBase {
 
         given(documentationSpec)
             .filter(getDocument("host-heartbeat-create"))
-            .cookie(userActions.authenticate(user))
             .body(expectedHostHeartbeat)
             .contentType("application/json")
         .when()

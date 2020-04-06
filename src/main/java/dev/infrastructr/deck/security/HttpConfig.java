@@ -7,6 +7,7 @@ import dev.infrastructr.deck.security.handlers.RestLogoutSuccessHandler;
 import dev.infrastructr.deck.security.props.SecurityRememberMeProps;
 import dev.infrastructr.deck.security.props.SecurityRequestMappingProps;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -38,7 +39,12 @@ public class HttpConfig extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers("/public/**/*").permitAll()
+            .mvcMatchers(HttpMethod.GET, "/hosts/**/init")
+            .permitAll()
+        .and()
+            .authorizeRequests()
+            .antMatchers("/hosts/**/heartbeat")
+            .permitAll()
         .and()
             .authorizeRequests()
             .anyRequest().authenticated()
