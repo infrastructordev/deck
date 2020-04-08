@@ -22,3 +22,8 @@ databaseChangeLog:
       file: database/v1/schema/host_heartbeats_fk.yml
   - include:
       file: database/v1/schema/host_tokens_fk.yml
+
+  - include:
+      file: database/v1/data/test-users.yml
+  - include:
+      file: database/v1/data/test-projects.yml

@@ -7,9 +7,10 @@ import dev.infrastructr.deck.api.requests.CreateHostRequest;
 import dev.infrastructr.deck.data.repositories.HostRepository;
 import dev.infrastructr.deck.data.repositories.ProjectRepository;
 import dev.infrastructr.deck.security.authorizers.HostAuthorizer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -54,9 +55,11 @@ public class HostService {
         return hostMapper.map(host);
     }
 
-    public List<Host> getByProjectId(UUID projectId){
+    public Page<Host> getByProjectId(Pageable pageable, UUID projectId){
         hostAuthorizer.authorizeByProjectId(projectId);
 
-        return hostMapper.map(hostRepository.findByProjectId(projectId));
+        return hostRepository
+            .findByProjectId(pageable, projectId)
+            .map(hostMapper::map);
     }
 }

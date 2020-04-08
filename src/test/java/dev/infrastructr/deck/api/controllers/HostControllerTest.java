@@ -70,8 +70,34 @@ public class HostControllerTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("[0].id", is(notNullValue()))
-            .body("[0].name", is(host.getName()));
+            .body("content[0].id", is(host.getId().toString()))
+            .body("content[0].name", is(host.getName()));
+    }
+
+    @Test
+    public void shouldGetOnePerPageSortedByProjectId(){
+        User user = userActions.create();
+        Cookie cookie = userActions.authenticate(user);
+        Project project = projectActions.create(cookie);
+        Host host = hostActions.create(cookie, project.getId());
+        Host anotherHost = hostActions.create(cookie, project.getId());
+        String sort = "name,desc";
+        Host expectedHost = host.getName().compareTo(anotherHost.getName()) > 0
+            ? host
+            : anotherHost;
+
+        given(documentationSpec)
+            .filter(getDocument("host-get-by-project-id"))
+            .cookie(userActions.authenticate(user))
+            .contentType("application/json")
+        .when()
+            .get("/projects/{projectId}/hosts?page=0&size=1&sort={sort}", project.getId(), sort)
+        .then()
+            .assertThat()
+            .statusCode(is(OK.value()))
+            .and()
+            .body("content[0].id", is(expectedHost.getId().toString()))
+            .body("content[0].name", is(expectedHost.getName()));
     }
 
     @Test
@@ -91,7 +117,7 @@ public class HostControllerTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("id", is(notNullValue()))
+            .body("id", is(host.getId().toString()))
             .body("name", is(host.getName()));
     }
 }

@@ -8,9 +8,10 @@ import dev.infrastructr.deck.data.entities.User;
 import dev.infrastructr.deck.data.repositories.ProjectRepository;
 import dev.infrastructr.deck.security.authorizers.ProjectAuthorizer;
 import dev.infrastructr.deck.security.providers.CurrentUserProvider;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -47,9 +48,11 @@ public class ProjectService {
         return projectMapper.map(projectRepository.save(project));
     }
 
-    public List<Project> getAll(){
+    public Page<Project> getAll(Pageable pageable){
         User user = currentUserProvider.getCurrentUser();
-        return projectMapper.map(projectRepository.findByOwnerId(user.getOrganization().getId()));
+        return projectRepository
+            .findByOwnerId(pageable, user.getOrganization().getId())
+            .map(projectMapper::map);
     }
 
     public Project getById(UUID id){

@@ -3,6 +3,8 @@ package dev.infrastructr.deck.api.controllers;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.requests.CreateHostRequest;
 import dev.infrastructr.deck.api.services.HostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,8 +26,11 @@ public class HostController {
     }
 
     @GetMapping("/projects/{projectId}/hosts")
-    public @ResponseBody List<Host> getAll(@PathVariable("projectId") UUID projectId){
-        return hostService.getByProjectId(projectId);
+    public @ResponseBody Page<Host> getAll(
+        Pageable pageable,
+        @PathVariable("projectId") UUID projectId
+    ){
+        return hostService.getByProjectId(pageable, projectId);
     }
 
     @GetMapping("/hosts/{hostId}")

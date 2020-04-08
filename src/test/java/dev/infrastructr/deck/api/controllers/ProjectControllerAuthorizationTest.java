@@ -38,7 +38,7 @@ public class ProjectControllerAuthorizationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("$", hasSize(0));
+            .body("content.$", hasSize(0));
     }
 
     @Test

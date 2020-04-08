@@ -67,12 +67,42 @@ public class ProjectControllerTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("[0].id", is(notNullValue()))
-            .body("[0].name", is(project.getName()))
-            .body("[0].author.id", is(user.getId().toString()))
-            .body("[0].author.name", is(user.getName()))
-            .body("[0].owner.id", is(organization.getId().toString()))
-            .body("[0].owner.name", is(organization.getName()));
+            .body("content[0].id", is(project.getId().toString()))
+            .body("content[0].name", is(project.getName()))
+            .body("content[0].author.id", is(user.getId().toString()))
+            .body("content[0].author.name", is(user.getName()))
+            .body("content[0].owner.id", is(organization.getId().toString()))
+            .body("content[0].owner.name", is(organization.getName()));
+    }
+
+    @Test
+    public void shouldGetOnePerPageSorted(){
+        User user = userActions.create();
+        Organization organization = user.getOrganization();
+        Cookie cookie = userActions.authenticate(user);
+        Project project = projectActions.create(cookie);
+        Project anotherProject = projectActions.create(cookie);
+        String sort = "name,desc";
+        Project expectedProject = project.getName().compareTo(anotherProject.getName()) > 0
+            ? project
+            : anotherProject;
+
+        given(documentationSpec)
+            .filter(getDocument("project-get-all"))
+            .cookie(userActions.authenticate(user))
+            .contentType("application/json")
+        .when()
+            .get("/projects?page=0&size=1&sort={sort}", sort)
+        .then()
+            .assertThat()
+            .statusCode(is(OK.value()))
+            .and()
+            .body("content[0].id", is(expectedProject.getId().toString()))
+            .body("content[0].name", is(expectedProject.getName()))
+            .body("content[0].author.id", is(user.getId().toString()))
+            .body("content[0].author.name", is(user.getName()))
+            .body("content[0].owner.id", is(organization.getId().toString()))
+            .body("content[0].owner.name", is(organization.getName()));
     }
 
     @Test
@@ -92,7 +122,7 @@ public class ProjectControllerTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("id", is(notNullValue()))
+            .body("id", is(project.getId().toString()))
             .body("name", is(project.getName()))
             .body("author.id", is(user.getId().toString()))
             .body("author.name", is(user.getName()))

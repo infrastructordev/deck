@@ -3,9 +3,10 @@ package dev.infrastructr.deck.api.controllers;
 import dev.infrastructr.deck.api.entities.Project;
 import dev.infrastructr.deck.api.requests.CreateProjectRequest;
 import dev.infrastructr.deck.api.services.ProjectService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,8 +25,8 @@ public class ProjectController {
     }
 
     @GetMapping
-    public @ResponseBody List<Project> getAll(){
-        return projectService.getAll();
+    public @ResponseBody Page<Project> getAll(Pageable pageable){
+        return projectService.getAll(pageable);
     }
 
     @GetMapping("/{projectId}")
