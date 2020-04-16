@@ -6,10 +6,13 @@ import dev.infrastructr.deck.api.mappers.ProjectMapper;
 import dev.infrastructr.deck.api.requests.CreateProjectRequest;
 import dev.infrastructr.deck.data.entities.User;
 import dev.infrastructr.deck.data.repositories.ProjectRepository;
+import dev.infrastructr.deck.data.specs.ProjectFilterSpec;
+import dev.infrastructr.deck.data.specs.ProjectOwnerIdSpec;
 import dev.infrastructr.deck.security.authorizers.ProjectAuthorizer;
 import dev.infrastructr.deck.security.providers.CurrentUserProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -44,14 +47,20 @@ public class ProjectService {
         project.setAuthor(user);
         project.setOwner(user.getOrganization());
         project.setName(createProjectRequest.getName());
+        project.setDescription(createProjectRequest.getDescription());
 
         return projectMapper.map(projectRepository.save(project));
     }
 
-    public Page<Project> getAll(Pageable pageable){
+    public Page<Project> getAll(Pageable pageable, String filter){
         User user = currentUserProvider.getCurrentUser();
         return projectRepository
-            .findByOwnerId(pageable, user.getOrganization().getId())
+            .findAll(
+                Specification
+                    .where(new ProjectOwnerIdSpec(user.getOrganization().getId()))
+                    .and(new ProjectFilterSpec(filter)),
+                pageable
+            )
             .map(projectMapper::map);
     }
 

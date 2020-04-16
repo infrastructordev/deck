@@ -7,6 +7,8 @@ public class CreateProjectRequestBuilder {
 
     private String name = DataFaker.getInstance().commerce().productName();
 
+    private String description = DataFaker.getInstance().commerce().material();
+
     private CreateProjectRequestBuilder(){
     }
 
@@ -19,9 +21,15 @@ public class CreateProjectRequestBuilder {
         return this;
     }
 
+    public CreateProjectRequestBuilder withDescription(String description){
+        this.description = description;
+        return this;
+    }
+
     public CreateProjectRequest build(){
         CreateProjectRequest createProjectRequest = new CreateProjectRequest();
         createProjectRequest.setName(name);
+        createProjectRequest.setDescription(description);
         return createProjectRequest;
     }
 }

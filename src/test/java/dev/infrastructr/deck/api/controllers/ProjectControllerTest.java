@@ -44,6 +44,7 @@ public class ProjectControllerTest extends WebTestBase {
             .and()
             .body("id", is(notNullValue()))
             .body("name", is(request.getName()))
+            .body("description", is(request.getDescription()))
             .body("author.id", is(user.getId().toString()))
             .body("author.name", is(user.getName()))
             .body("owner.id", is(organization.getId().toString()))
@@ -69,6 +70,34 @@ public class ProjectControllerTest extends WebTestBase {
             .and()
             .body("content[0].id", is(project.getId().toString()))
             .body("content[0].name", is(project.getName()))
+            .body("content[0].description", is(project.getDescription()))
+            .body("content[0].author.id", is(user.getId().toString()))
+            .body("content[0].author.name", is(user.getName()))
+            .body("content[0].owner.id", is(organization.getId().toString()))
+            .body("content[0].owner.name", is(organization.getName()));
+    }
+
+    @Test
+    public void shouldGetFiltered(){
+        User user = userActions.create();
+        Organization organization = user.getOrganization();
+        Cookie cookie = userActions.authenticate(user);
+        Project project = projectActions.create(cookie);
+        projectActions.create(cookie);
+
+        given(documentationSpec)
+            .filter(getDocument("project-get-filtered"))
+            .cookie(userActions.authenticate(user))
+            .contentType("application/json")
+        .when()
+            .get("/projects?filter={filter}", project.getName())
+        .then()
+            .assertThat()
+            .statusCode(is(OK.value()))
+            .and()
+            .body("content[0].id", is(project.getId().toString()))
+            .body("content[0].name", is(project.getName()))
+            .body("content[0].description", is(project.getDescription()))
             .body("content[0].author.id", is(user.getId().toString()))
             .body("content[0].author.name", is(user.getName()))
             .body("content[0].owner.id", is(organization.getId().toString()))
@@ -99,6 +128,7 @@ public class ProjectControllerTest extends WebTestBase {
             .and()
             .body("content[0].id", is(expectedProject.getId().toString()))
             .body("content[0].name", is(expectedProject.getName()))
+            .body("content[0].description", is(expectedProject.getDescription()))
             .body("content[0].author.id", is(user.getId().toString()))
             .body("content[0].author.name", is(user.getName()))
             .body("content[0].owner.id", is(organization.getId().toString()))
@@ -124,6 +154,7 @@ public class ProjectControllerTest extends WebTestBase {
             .and()
             .body("id", is(project.getId().toString()))
             .body("name", is(project.getName()))
+            .body("description", is(project.getDescription()))
             .body("author.id", is(user.getId().toString()))
             .body("author.name", is(user.getName()))
             .body("owner.id", is(organization.getId().toString()))

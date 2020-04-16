@@ -17,6 +17,8 @@ public class Project extends BaseEntity {
 
     private String name;
 
+    private String description;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "owner_id")
     private Organization owner;
@@ -39,6 +41,14 @@ public class Project extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Organization getOwner() {

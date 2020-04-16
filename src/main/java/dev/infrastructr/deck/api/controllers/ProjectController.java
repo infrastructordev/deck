@@ -25,8 +25,11 @@ public class ProjectController {
     }
 
     @GetMapping
-    public @ResponseBody Page<Project> getAll(Pageable pageable){
-        return projectService.getAll(pageable);
+    public @ResponseBody Page<Project> getAll(
+        Pageable pageable,
+        @RequestParam(value = "filter", defaultValue = "") String filter
+    ){
+        return projectService.getAll(pageable, filter);
     }
 
     @GetMapping("/{projectId}")
