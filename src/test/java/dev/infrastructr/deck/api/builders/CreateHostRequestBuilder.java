@@ -11,6 +11,8 @@ public class CreateHostRequestBuilder {
 
     private String name = DataFaker.getInstance().commerce().productName();
 
+    private String description = DataFaker.getInstance().commerce().material();
+
     private CreateHostRequestBuilder(){
     }
 
@@ -23,6 +25,11 @@ public class CreateHostRequestBuilder {
         return this;
     }
 
+    public CreateHostRequestBuilder withDescription(String description){
+        this.description = description;
+        return this;
+    }
+
     public CreateHostRequestBuilder withProjectId(UUID project){
         this.projectId = project;
         return this;
@@ -31,6 +38,7 @@ public class CreateHostRequestBuilder {
     public CreateHostRequest build(){
         CreateHostRequest createHostRequest = new CreateHostRequest();
         createHostRequest.setName(name);
+        createHostRequest.setDescription(description);
         createHostRequest.setProjectId(projectId);
         return createHostRequest;
     }

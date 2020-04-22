@@ -8,6 +8,8 @@ public class CreateHostRequest {
 
     private String name;
 
+    private String description;
+
     public String getName() {
         return name;
     }
@@ -22,5 +24,13 @@ public class CreateHostRequest {
 
     public void setProjectId(UUID projectId) {
         this.projectId = projectId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

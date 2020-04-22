@@ -50,7 +50,8 @@ public class HostControllerTest extends WebTestBase {
             .statusCode(is(OK.value()))
             .and()
             .body("id", is(notNullValue()))
-            .body("name", is(request.getName()));
+            .body("name", is(request.getName()))
+            .body("description", is(request.getDescription()));
     }
 
     @Test
@@ -71,7 +72,8 @@ public class HostControllerTest extends WebTestBase {
             .statusCode(is(OK.value()))
             .and()
             .body("content[0].id", is(host.getId().toString()))
-            .body("content[0].name", is(host.getName()));
+            .body("content[0].name", is(host.getName()))
+            .body("content[0].description", is(host.getDescription()));
     }
 
     @Test
@@ -97,7 +99,8 @@ public class HostControllerTest extends WebTestBase {
             .statusCode(is(OK.value()))
             .and()
             .body("content[0].id", is(expectedHost.getId().toString()))
-            .body("content[0].name", is(expectedHost.getName()));
+            .body("content[0].name", is(expectedHost.getName()))
+            .body("content[0].description", is(expectedHost.getDescription()));
     }
 
     @Test
@@ -118,6 +121,7 @@ public class HostControllerTest extends WebTestBase {
             .statusCode(is(OK.value()))
             .and()
             .body("id", is(host.getId().toString()))
-            .body("name", is(host.getName()));
+            .body("name", is(host.getName()))
+            .body("description", is(host.getDescription()));
     }
 }

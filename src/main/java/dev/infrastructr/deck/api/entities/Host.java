@@ -8,7 +8,7 @@ public class Host extends BaseEntity {
 
     private String name;
 
-    private String initCommand;
+    private String description;
 
     public UUID getId() {
         return id;
@@ -26,11 +26,11 @@ public class Host extends BaseEntity {
         this.name = name;
     }
 
-    public String getInitCommand() {
-        return initCommand;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInitCommand(String initCommand) {
-        this.initCommand = initCommand;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -43,6 +43,7 @@ public class HostService {
         dev.infrastructr.deck.data.entities.Host host = new dev.infrastructr.deck.data.entities.Host();
         host.setProject(project);
         host.setName(createHostRequest.getName());
+        host.setDescription(createHostRequest.getDescription());
 
         return hostMapper.map(hostRepository.save(host));
     }
