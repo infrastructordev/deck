@@ -6,6 +6,8 @@ databaseChangeLog:
   - include:
       file: database/v1/schema/projects.yml
   - include:
+      file: database/v1/schema/providers.yml
+  - include:
       file: database/v1/schema/hosts.yml
   - include:
       file: database/v1/schema/host_heartbeats.yml
@@ -16,6 +18,8 @@ databaseChangeLog:
       file: database/v1/schema/users_fk.yml
   - include:
       file: database/v1/schema/projects_fk.yml
+  - include:
+      file: database/v1/schema/providers_fk.yml
   - include:
       file: database/v1/schema/hosts_fk.yml
   - include:

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Adds foreign keys to table 'providers'.
+      changes:
+        - addForeignKeyConstraint :
+            baseTableName: providers
+            baseColumnNames: owner_id
+            constraintName: fk_providers_owner_id_organizations_id
+            referencedTableName: organizations
+            referencedColumnNames: id
