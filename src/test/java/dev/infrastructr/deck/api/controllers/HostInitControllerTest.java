@@ -1,12 +1,10 @@
 package dev.infrastructr.deck.api.controllers;
 
 import dev.infrastructr.deck.WebTestBase;
-import dev.infrastructr.deck.api.actions.HostActions;
-import dev.infrastructr.deck.api.actions.HostInitActions;
-import dev.infrastructr.deck.api.actions.ProjectActions;
-import dev.infrastructr.deck.api.actions.UserActions;
+import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.HostInit;
+import dev.infrastructr.deck.api.entities.Inventory;
 import dev.infrastructr.deck.api.entities.Project;
 import dev.infrastructr.deck.api.services.HostScriptProvider;
 import dev.infrastructr.deck.data.entities.User;
@@ -39,6 +37,9 @@ public class HostInitControllerTest extends WebTestBase {
     private HostInitActions hostInitActions;
 
     @Autowired
+    private InventoryActions inventoryActions;
+
+    @Autowired
     private HostScriptProvider hostScriptProvider;
 
     @Test
@@ -46,7 +47,8 @@ public class HostInitControllerTest extends WebTestBase {
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
-        Host host = hostActions.create(cookie, project.getId());
+        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        Host host = hostActions.create(cookie, inventory.getId());
 
         HostInit hostInit = given(documentationSpec)
             .filter(getDocument("host-init-create"))
@@ -70,7 +72,8 @@ public class HostInitControllerTest extends WebTestBase {
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
-        Host host = hostActions.create(cookie, project.getId());
+        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        Host host = hostActions.create(cookie, inventory.getId());
         HostInit hostInit = hostInitActions.create(cookie, host.getId());
         String expectedHostInitScript = getExpectedScript(host.getId(), hostInit.getToken());
 
