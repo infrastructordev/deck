@@ -1,15 +1,14 @@
 package dev.infrastructr.deck.data.entities;
 
 import javax.persistence.*;
-
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
-@Table(name = "hosts")
-public class Host extends BaseEntity {
+@Table(name = "inventories")
+public class Inventory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -20,8 +19,8 @@ public class Host extends BaseEntity {
     private String description;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public UUID getId() {
         return id;
@@ -47,11 +46,11 @@ public class Host extends BaseEntity {
         this.description = description;
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public Project getProject() {
+        return project;
     }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
+    public void setProject(Project project) {
+        this.project = project;
     }
 }

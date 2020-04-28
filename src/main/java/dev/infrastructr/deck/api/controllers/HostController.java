@@ -18,18 +18,19 @@ public class HostController {
         this.hostService = hostService;
     }
 
-    @PostMapping("/projects/{projectId}/hosts")
-    public @ResponseBody Host create(@PathVariable("projectId") UUID projectId, @RequestBody CreateHostRequest request) {
-        request.setProjectId(projectId);
+    @PostMapping("/inventories/{inventoryId}/hosts")
+    public @ResponseBody Host create(@PathVariable("inventoryId") UUID inventoryId, @RequestBody CreateHostRequest request) {
+        request.setInventoryId(inventoryId);
         return hostService.create(request);
     }
 
-    @GetMapping("/projects/{projectId}/hosts")
+    @GetMapping("/inventories/{inventoryId}/hosts")
     public @ResponseBody Page<Host> getAll(
         Pageable pageable,
-        @PathVariable("projectId") UUID projectId
+        @RequestParam(value = "filter", defaultValue = "") String filter,
+        @PathVariable("inventoryId") UUID inventoryId
     ){
-        return hostService.getByProjectId(pageable, projectId);
+        return hostService.getByInventoryId(pageable, filter, inventoryId);
     }
 
     @GetMapping("/hosts/{hostId}")

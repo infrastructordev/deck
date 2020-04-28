@@ -2,11 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: ml@infrastructr.dev
-      comment: Adds foreign keys to table 'hosts'.
+      comment: Adds foreign keys to table 'groups'.
       changes:
         - addForeignKeyConstraint :
-            baseTableName: hosts
+            baseTableName: groups
             baseColumnNames: inventory_id
-            constraintName: fk_hosts_inventory_id_inventories_id
+            constraintName: fk_groups_inventory_id_inventories_id
             referencedTableName: inventories
             referencedColumnNames: id

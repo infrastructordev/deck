@@ -1,15 +1,14 @@
 package dev.infrastructr.deck.data.entities;
 
 import javax.persistence.*;
-
 import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
-@Table(name = "hosts")
-public class Host extends BaseEntity {
+@Table(name = "groups")
+public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -54,4 +53,5 @@ public class Host extends BaseEntity {
     public void setInventory(Inventory inventory) {
         this.inventory = inventory;
     }
+
 }

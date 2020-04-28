@@ -6,6 +6,10 @@ databaseChangeLog:
   - include:
       file: database/v1/schema/projects.yml
   - include:
+      file: database/v1/schema/inventories.yml
+  - include:
+      file: database/v1/schema/groups.yml
+  - include:
       file: database/v1/schema/providers.yml
   - include:
       file: database/v1/schema/hosts.yml
@@ -14,12 +18,17 @@ databaseChangeLog:
   - include:
       file: database/v1/schema/host_tokens.yml
 
+
   - include:
       file: database/v1/schema/users_fk.yml
   - include:
       file: database/v1/schema/projects_fk.yml
   - include:
       file: database/v1/schema/providers_fk.yml
+  - include:
+      file: database/v1/schema/inventories_fk.yml
+  - include:
+      file: database/v1/schema/groups_fk.yml
   - include:
       file: database/v1/schema/hosts_fk.yml
   - include:

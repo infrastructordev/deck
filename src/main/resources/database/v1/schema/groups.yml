@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: ml@infrastructr.dev
-      comment: Creates table 'hosts'.
+      comment: Creates table 'groups'.
       changes:
         - createTable:
-            tableName: hosts
+            tableName: groups
             columns:
               - column:
                   name: id
@@ -33,6 +33,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - addUniqueConstraint:
-            tableName: hosts
+            tableName: groups
             columnNames: name, inventory_id
-            constraintName: hosts_name_inventory_id_key
+            constraintName: groups_name_inventory_id_key

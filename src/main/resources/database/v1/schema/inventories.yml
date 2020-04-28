@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: ml@infrastructr.dev
-      comment: Creates table 'hosts'.
+      comment: Creates table 'inventories'.
       changes:
         - createTable:
-            tableName: hosts
+            tableName: inventories
             columns:
               - column:
                   name: id
@@ -28,11 +28,11 @@ databaseChangeLog:
                   name: description
                   type: text
               - column:
-                  name: inventory_id
+                  name: project_id
                   type: uuid
                   constraints:
                     nullable: false
         - addUniqueConstraint:
-            tableName: hosts
-            columnNames: name, inventory_id
-            constraintName: hosts_name_inventory_id_key
+            tableName: inventories
+            columnNames: name, project_id
+            constraintName: inventories_name_project_id_key

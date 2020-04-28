@@ -443,31 +443,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="paragraph">
 <p>Authenticate as a user.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /users/login HTTP/1.1
-Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1
-Host: api.infrastructr.dev
-
-username=maurita.stroman&amp;password=123456</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-login/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Set-Cookie: INFRASTRUCTR_DECK_PID=bWF1cml0YS5zdHJvbWFuOjE1ODgzNjA5NjI5Nzk6N2RiMjRmNmI2YmUxNGZjNWUwOWRmOTM2YjA1YjA3MDc; Max-Age=604800; Expires=Fri, 01-May-2020 19:22:42 GMT; Path=/; HttpOnly
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Date: Fri, 24 Apr 2020 19:22:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-login/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -475,33 +457,13 @@ Connection: keep-alive</code></pre>
 <div class="paragraph">
 <p>Get authenticated user details.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /users/me HTTP/1.1
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=Y3J1ei5wYWRiZXJnOjE1ODgzNjA5NTk2MjY6MjFlYTliOTg5ODg3Y2FmMDlhNzJkODRiZWRiZDM2MTE</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-get-me/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:38 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 169
-
-{"id":"605c8452-b211-46fa-ba3a-f59dee03a6e8","name":"cruz.padberg","organization":{"id":"ef26d28d-d4a6-474d-8dc4-3543af4878c4","name":"Cassin-Bednar"},"roles":["OWNER"]}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-get-me/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -509,31 +471,13 @@ Content-Length: 169
 <div class="paragraph">
 <p>Logout as a user.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /users/logout HTTP/1.1
-Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=ZnJlZGVyaWNrLnRyZW1ibGF5OjE1ODgzNjA5NjI2MjQ6ZGI4ZDZmNDQ2NjY1NGYwMWJmZTNjOGI5ODRlMmJiOTQ</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-logout/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Set-Cookie: INFRASTRUCTR_DECK_PID=; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
-Set-Cookie: INFRASTRUCTR_DECK_PID=; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Date: Fri, 24 Apr 2020 19:22:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/user-logout/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -546,37 +490,13 @@ Connection: keep-alive</code></pre>
 <div class="paragraph">
 <p>Create a project.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /projects HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Content-Length: 61
-Cookie: INFRASTRUCTR_DECK_PID=bW9zaGUua3V0Y2g6MTU4ODM2MDk1Mzc1ODozZTg2Yzg4NTczNDhmOTMzYTIyOWYxZWU0MjViODQ0NQ
-
-{"name":"Heavy Duty Aluminum Pants","description":"Concrete"}</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-create/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:33 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 259
-
-{"id":"8ac684bb-24ff-4c76-8583-ae38137939ab","name":"Heavy Duty Aluminum Pants","description":"Concrete","owner":{"id":"af243427-f489-4199-adc2-b5dd4f3bbc20","name":"Lehner-Windler"},"author":{"id":"4145d85f-f318-4c03-8acb-f7fae5079a72","name":"moshe.kutch"}}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-create/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -584,34 +504,13 @@ Content-Length: 259
 <div class="paragraph">
 <p>Get a project by id.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /projects/4ad12947-0bb4-4308-a5db-cefa7634e9f2 HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=dmFsZW5lLmtlZWJsZXI6MTU4ODM2MDk1NDc0NzpjYjhlOWZhZjU3ZTM1ZTkyNzk2YTlmYTE0NzljNDg3MQ</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-get-by-id/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:34 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 274
-
-{"id":"4ad12947-0bb4-4308-a5db-cefa7634e9f2","name":"Aerodynamic Copper Computer","description":"Wooden","owner":{"id":"5781aa38-0b6b-4cc7-9b6b-86e118c33613","name":"Satterfield, Bauch and Fay"},"author":{"id":"85e0b324-1f0e-4fc9-9554-19eb9008bb3d","name":"valene.keebler"}}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-get-by-id/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -619,34 +518,13 @@ Content-Length: 274
 <div class="paragraph">
 <p>Get all projects available to the user.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /projects?page=0&amp;size=1&amp;sort=name%2Cdesc HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=YXJseW5lLmpvbmVzOjE1ODgzNjA5NTUyMjY6OWJmNTdkMDY5MWE1MWY0ZjE2MDNlNjA2YTJkOTY1ZjY</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-get-all/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:34 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 570
-
-{"content":[{"id":"eba598e5-d8cb-4e99-97e4-5639424e5249","name":"Intelligent Steel Bench","description":"Marble","owner":{"id":"5b2e58bc-f94d-41e7-80d6-a62b4a066430","name":"Hessel-Dach"},"author":{"id":"4ae18e01-b6c4-407d-917e-28d8ccb8830d","name":"arlyne.jones"}}],"pageable":{"sort":{"sorted":true,"unsorted":false,"empty":false},"offset":0,"pageNumber":0,"pageSize":1,"paged":true,"unpaged":false},"last":false,"totalPages":2,"totalElements":2,"number":0,"sort":{"sorted":true,"unsorted":false,"empty":false},"size":1,"first":true,"numberOfElements":1,"empty":false}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/project-get-all/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -659,37 +537,13 @@ Content-Length: 570
 <div class="paragraph">
 <p>Create a host.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /projects/387d3fed-f836-4660-8ad6-4f3df79136d2/hosts HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Content-Length: 109
-Cookie: INFRASTRUCTR_DECK_PID=Y3VydGlzLnNpcGVzOjE1ODgzNjA5NjEwMTE6OWNiZmY4YTY3MjcxOGFlOTMyMDFjMDdhMDQ0N2IzMjc
-
-{"projectId":"387d3fed-f836-4660-8ad6-4f3df79136d2","name":"Synergistic Paper Shoes","description":"Leather"}</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-create/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:41 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 102
-
-{"id":"8c696390-54c9-42f3-9e19-a2fb8ae34b50","name":"Synergistic Paper Shoes","description":"Leather"}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-create/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -697,34 +551,13 @@ Content-Length: 102
 <div class="paragraph">
 <p>Get a host by id.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /hosts/5f6287ef-5497-436d-a140-758bca5490b1 HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=bHVpZ2kuZG9vbGV5OjE1ODgzNjA5NjE0NzY6MTYyMGM2N2NiZjU1NjY1MDkzZmE4MmJkZWZiYTM4NmE</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-get-by-id/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:41 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 102
-
-{"id":"5f6287ef-5497-436d-a140-758bca5490b1","name":"Aerodynamic Steel Coat","description":"Aluminum"}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-get-by-id/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -732,34 +565,13 @@ Content-Length: 102
 <div class="paragraph">
 <p>Get all hosts attached to the current project.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /projects/05587154-3a42-432e-bd5d-662249a7ed8b/hosts?page=0&amp;size=1&amp;sort=name%2Cdesc HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=aXJlbmEuaHVlbDoxNTg4MzYwOTYyMzU5OjhkMGY0MWJhNWU4MmZlYjA3NTE4MzQxZDAxNWVkY2Jh</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-get-by-project-id/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:42 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 414
-
-{"content":[{"id":"ee66b49c-c1cc-489a-b1b1-1207da545975","name":"Rustic Wooden Shirt","description":"Cotton"}],"pageable":{"sort":{"sorted":true,"unsorted":false,"empty":false},"offset":0,"pageNumber":0,"pageSize":1,"paged":true,"unpaged":false},"last":false,"totalPages":2,"totalElements":2,"number":0,"sort":{"sorted":true,"unsorted":false,"empty":false},"size":1,"first":true,"numberOfElements":1,"empty":false}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-get-by-project-id/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -772,34 +584,13 @@ Content-Length: 414
 <div class="paragraph">
 <p>Create token and get host registration command for a particular host.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /hosts/d2d5f2bd-7b73-4cad-8f7c-85e7ea6c0ead/init HTTP/1.1
-Content-Type: application/x-www-form-urlencoded; charset=ISO-8859-1
-Host: api.infrastructr.dev
-Cookie: INFRASTRUCTR_DECK_PID=YW50b255LnJlaWxseToxNTg4MzYwOTUwNjM1OjQ0MzViZDgxM2VhOTk0ZDFmMjM4ZDQ1MmNjZmEyODkx</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-init-create/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Transfer-Encoding: chunked
-Date: Fri, 24 Apr 2020 19:22:30 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-Content-Length: 204
-
-{"token":"b7f69162-af84-40f9-b983-674a591568d8","command":"curl -s http://api.infrastructr.local:38773/hosts/d2d5f2bd-7b73-4cad-8f7c-85e7ea6c0ead/init?hostToken=b7f69162-af84-40f9-b983-674a591568d8 | sh"}</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-init-create/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -807,36 +598,13 @@ Content-Length: 204
 <div class="paragraph">
 <p>Get init script to execute for a particular host.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /hosts/fe24852e-c452-4adb-a3c5-948be43caa2d/init?hostToken=103ad53d-4c7f-4681-8b1b-96b7396f55fe HTTP/1.1
-Host: api.infrastructr.dev</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-init-get/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Accept-Ranges: bytes
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/x-sh
-Content-Length: 324
-Date: Fri, 24 Apr 2020 19:22:31 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-
-#!/bin/sh
-
-curl -s "https://raw.githubusercontent.com/nl2go/ansible-pull-init/master/ansible-install.sh" | sh
-
-echo "* * * * * root curl -s http://api.infrastructr.local:38773/hosts/fe24852e-c452-4adb-a3c5-948be43caa2d/heartbeat?hostToken=103ad53d-4c7f-4681-8b1b-96b7396f55fe | sh" &gt; /etc/cron.d/infrastructr-deck-heartbeat</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-init-get/http-response.adoc[]</p>
 </div>
 </div>
 </div>
@@ -849,36 +617,13 @@ echo "* * * * * root curl -s http://api.infrastructr.local:38773/hosts/fe24852e-
 <div class="paragraph">
 <p>Get current heartbeat script to execute for a particular host.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /hosts/6c9d5cee-7f63-4c6c-8069-802e3577fa54/heartbeat?hostToken=439d1947-a899-4933-8ce1-60b4c5704890 HTTP/1.1
-Host: api.infrastructr.dev</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-heartbeat-get/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-Accept-Ranges: bytes
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Type: application/json
-Content-Length: 321
-Date: Fri, 24 Apr 2020 19:22:39 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive
-
-#!/bin/sh
-
-ansible -m setup localhost --tree /tmp/infrastructr-deck-facts &gt;/dev/null 2&gt;&amp;1
-
-curl -X POST -H "Content-Type: application/json" -d @/tmp/infrastructr-deck-facts/localhost "http://api.infrastructr.local:38773/hosts/6c9d5cee-7f63-4c6c-8069-802e3577fa54/heartbeat?hostToken=439d1947-a899-4933-8ce1-60b4c5704890"</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-heartbeat-get/http-response.adoc[]</p>
 </div>
 </div>
 <div class="sect2">
@@ -886,31 +631,13 @@ curl -X POST -H "Content-Type: application/json" -d @/tmp/infrastructr-deck-fact
 <div class="paragraph">
 <p>Submit host heartbeat results.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Request</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /hosts/0ad69d50-a137-4e2f-87a6-a2cee0d7820f/heartbeat?hostToken=0b5b881f-94f5-4d77-b0eb-f1c068ff1b1b HTTP/1.1
-Content-Type: application/json; charset=UTF-8
-Host: api.infrastructr.dev
-Content-Length: 13
-
-{"foo":"bar"}</code></pre>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-heartbeat-create/http-request.adoc[]</p>
 </div>
-</div>
-<div class="listingblock">
+<div class="paragraph">
 <div class="title">Response</div>
-<div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">HTTP/1.1 200 OK
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Date: Fri, 24 Apr 2020 19:22:39 GMT
-Keep-Alive: timeout=60
-Connection: keep-alive</code></pre>
-</div>
+<p>Unresolved directive in index.adoc - include::../../../target/generated-snippets/host-heartbeat-create/http-response.adoc[]</p>
 </div>
 </div>
 </div>

@@ -1,11 +1,9 @@
 package dev.infrastructr.deck.api.controllers;
 
 import dev.infrastructr.deck.WebTestBase;
-import dev.infrastructr.deck.api.actions.HostActions;
 import dev.infrastructr.deck.api.actions.InventoryActions;
 import dev.infrastructr.deck.api.actions.ProjectActions;
 import dev.infrastructr.deck.api.actions.UserActions;
-import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.Inventory;
 import dev.infrastructr.deck.api.entities.Project;
 import dev.infrastructr.deck.api.requests.CreateHostRequest;
@@ -20,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class HostControllerTest extends WebTestBase {
+public class InventoryControllerTest extends WebTestBase {
 
     @Autowired
     private UserActions userActions;
@@ -31,26 +29,22 @@ public class HostControllerTest extends WebTestBase {
     @Autowired
     private InventoryActions inventoryActions;
 
-    @Autowired
-    private HostActions hostActions;
-
     @Test
     public void shouldCreate(){
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
         CreateHostRequest request = createHostRequest()
-            .withInventoryId(inventory.getId())
+            .withInventoryId(project.getId())
             .build();
 
         given(documentationSpec)
-            .filter(getDocument("host-create"))
+            .filter(getDocument("inventory-create"))
             .cookie(cookie)
             .body(request)
             .contentType("application/json")
         .when()
-            .post("/inventories/{inventoryId}/hosts", inventory.getId())
+            .post("/projects/{projectId}/inventories", project.getId())
         .then()
             .assertThat()
             .statusCode(is(OK.value()))
@@ -61,26 +55,47 @@ public class HostControllerTest extends WebTestBase {
     }
 
     @Test
-    public void shouldGetByInventoryId(){
+    public void shouldGetByProjectId(){
         User user = userActions.create();
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
         Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
 
         given(documentationSpec)
-            .filter(getDocument("host-get-by-inventory-id"))
+            .filter(getDocument("inventory-get-by-project-id"))
             .cookie(userActions.authenticate(user))
             .contentType("application/json")
         .when()
-            .get("/inventories/{inventoryId}/hosts", inventory.getId())
+            .get("/projects/{projectId}/inventories", project.getId())
         .then()
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("content[0].id", is(host.getId().toString()))
-            .body("content[0].name", is(host.getName()))
-            .body("content[0].description", is(host.getDescription()));
+            .body("content[0].id", is(inventory.getId().toString()))
+            .body("content[0].name", is(inventory.getName()))
+            .body("content[0].description", is(inventory.getDescription()));
+    }
+
+    @Test
+    public void shouldGetFilteredByProjectId(){
+        User user = userActions.create();
+        Cookie cookie = userActions.authenticate(user);
+        Project project = projectActions.create(cookie);
+        Inventory inventory = inventoryActions.create(cookie, project.getId());
+
+        given(documentationSpec)
+            .filter(getDocument("inventory-get-filtered"))
+            .cookie(userActions.authenticate(user))
+            .contentType("application/json")
+        .when()
+            .get("/projects/{projectId}/inventories?filter={filter}", project.getId(), inventory.getName())
+        .then()
+            .assertThat()
+            .statusCode(is(OK.value()))
+            .and()
+            .body("content[0].id", is(inventory.getId().toString()))
+            .body("content[0].name", is(inventory.getName()))
+            .body("content[0].description", is(inventory.getDescription()));
     }
 
     @Test
@@ -89,26 +104,25 @@ public class HostControllerTest extends WebTestBase {
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
         Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        Host anotherHost = hostActions.create(cookie, inventory.getId());
+        Inventory anotherInventory = inventoryActions.create(cookie, project.getId());
         String sort = "name,desc";
-        Host expectedHost = host.getName().compareTo(anotherHost.getName()) > 0
-            ? host
-            : anotherHost;
+        Inventory expectedInventory = inventory.getName().compareTo(anotherInventory.getName()) > 0
+            ? inventory
+            : anotherInventory;
 
         given(documentationSpec)
-            .filter(getDocument("host-get-by-inventory-id"))
+            .filter(getDocument("inventory-get-by-project-id"))
             .cookie(userActions.authenticate(user))
             .contentType("application/json")
         .when()
-            .get("/inventories/{inventoryId}/hosts?page=0&size=1&sort={sort}", inventory.getId(), sort)
+            .get("/projects/{projectId}/inventories?page=0&size=1&sort={sort}", project.getId(), sort)
         .then()
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("content[0].id", is(expectedHost.getId().toString()))
-            .body("content[0].name", is(expectedHost.getName()))
-            .body("content[0].description", is(expectedHost.getDescription()));
+            .body("content[0].id", is(expectedInventory.getId().toString()))
+            .body("content[0].name", is(expectedInventory.getName()))
+            .body("content[0].description", is(expectedInventory.getDescription()));
     }
 
     @Test
@@ -117,20 +131,19 @@ public class HostControllerTest extends WebTestBase {
         Cookie cookie = userActions.authenticate(user);
         Project project = projectActions.create(cookie);
         Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
 
         given(documentationSpec)
-            .filter(getDocument("host-get-by-id"))
+            .filter(getDocument("inventory-get-by-id"))
             .cookie(userActions.authenticate(user))
             .contentType("application/json")
         .when()
-            .get("/hosts/{hostId}", host.getId())
+            .get("/inventories/{inventoryId}", inventory.getId())
         .then()
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("id", is(host.getId().toString()))
-            .body("name", is(host.getName()))
-            .body("description", is(host.getDescription()));
+            .body("id", is(inventory.getId().toString()))
+            .body("name", is(inventory.getName()))
+            .body("description", is(inventory.getDescription()));
     }
 }

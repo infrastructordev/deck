@@ -5,10 +5,13 @@ import dev.infrastructr.deck.api.exceptions.NotFoundException;
 import dev.infrastructr.deck.api.mappers.HostMapper;
 import dev.infrastructr.deck.api.requests.CreateHostRequest;
 import dev.infrastructr.deck.data.repositories.HostRepository;
-import dev.infrastructr.deck.data.repositories.ProjectRepository;
+import dev.infrastructr.deck.data.repositories.InventoryRepository;
+import dev.infrastructr.deck.data.specs.HostFilterSpec;
+import dev.infrastructr.deck.data.specs.HostInventoryIdSpec;
 import dev.infrastructr.deck.security.authorizers.HostAuthorizer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -18,7 +21,7 @@ public class HostService {
 
     private final HostRepository hostRepository;
 
-    private final ProjectRepository projectRepository;
+    private final InventoryRepository inventoryRepository;
 
     private final HostMapper hostMapper;
 
@@ -28,20 +31,20 @@ public class HostService {
         HostRepository hostRepository,
         HostMapper hostMapper,
         HostAuthorizer hostAuthorizer,
-        ProjectRepository projectRepository
+        InventoryRepository inventoryRepository
     ){
         this.hostRepository = hostRepository;
         this.hostMapper = hostMapper;
         this.hostAuthorizer = hostAuthorizer;
-        this.projectRepository = projectRepository;
+        this.inventoryRepository = inventoryRepository;
     }
 
     public Host create(CreateHostRequest createHostRequest){
-        hostAuthorizer.authorizeByProjectId(createHostRequest.getProjectId());
+        hostAuthorizer.authorizeByInventoryId(createHostRequest.getInventoryId());
 
-        dev.infrastructr.deck.data.entities.Project project = projectRepository.findById(createHostRequest.getProjectId()).orElseThrow(NotFoundException::new);
+        dev.infrastructr.deck.data.entities.Inventory inventory = inventoryRepository.findById(createHostRequest.getInventoryId()).orElseThrow(NotFoundException::new);
         dev.infrastructr.deck.data.entities.Host host = new dev.infrastructr.deck.data.entities.Host();
-        host.setProject(project);
+        host.setInventory(inventory);
         host.setName(createHostRequest.getName());
         host.setDescription(createHostRequest.getDescription());
 
@@ -56,11 +59,16 @@ public class HostService {
         return hostMapper.map(host);
     }
 
-    public Page<Host> getByProjectId(Pageable pageable, UUID projectId){
-        hostAuthorizer.authorizeByProjectId(projectId);
+    public Page<Host> getByInventoryId(Pageable pageable, String filter, UUID inventoryId){
+        hostAuthorizer.authorizeByInventoryId(inventoryId);
 
         return hostRepository
-            .findByProjectId(pageable, projectId)
+            .findAll(
+                Specification
+                    .where(new HostInventoryIdSpec(inventoryId))
+                    .and(new HostFilterSpec(filter)),
+                pageable
+            )
             .map(hostMapper::map);
     }
 }

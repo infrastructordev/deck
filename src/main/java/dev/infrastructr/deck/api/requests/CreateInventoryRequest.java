@@ -2,9 +2,9 @@ package dev.infrastructr.deck.api.requests;
 
 import java.util.UUID;
 
-public class CreateHostRequest {
+public class CreateInventoryRequest {
 
-    private UUID inventoryId;
+    private UUID projectId;
 
     private String name;
 
@@ -18,12 +18,12 @@ public class CreateHostRequest {
         this.name = name;
     }
 
-    public UUID getInventoryId() {
-        return inventoryId;
+    public UUID getProjectId() {
+        return projectId;
     }
 
-    public void setInventoryId(UUID inventoryId) {
-        this.inventoryId = inventoryId;
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     public String getDescription() {

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Adds foreign keys to table 'inventories'.
+      changes:
+        - addForeignKeyConstraint :
+            baseTableName: inventories
+            baseColumnNames: project_id
+            constraintName: fk_inventories_project_id_projects_id
+            referencedTableName: projects
+            referencedColumnNames: id

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class CreateHostRequestBuilder {
 
-    private UUID projectId;
+    private UUID inventoryId;
 
     private String name = DataFaker.getInstance().commerce().productName();
 
@@ -16,7 +16,7 @@ public class CreateHostRequestBuilder {
     private CreateHostRequestBuilder(){
     }
 
-    public static CreateHostRequestBuilder createProjectRequest(){
+    public static CreateHostRequestBuilder createHostRequest(){
         return new CreateHostRequestBuilder();
     }
 
@@ -30,8 +30,8 @@ public class CreateHostRequestBuilder {
         return this;
     }
 
-    public CreateHostRequestBuilder withProjectId(UUID project){
-        this.projectId = project;
+    public CreateHostRequestBuilder withInventoryId(UUID inventoryId){
+        this.inventoryId = inventoryId;
         return this;
     }
 
@@ -39,7 +39,7 @@ public class CreateHostRequestBuilder {
         CreateHostRequest createHostRequest = new CreateHostRequest();
         createHostRequest.setName(name);
         createHostRequest.setDescription(description);
-        createHostRequest.setProjectId(projectId);
+        createHostRequest.setInventoryId(inventoryId);
         return createHostRequest;
     }
 }

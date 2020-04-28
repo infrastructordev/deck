@@ -2,7 +2,7 @@ package dev.infrastructr.deck.api.requests;
 
 import java.util.UUID;
 
-public class CreateHostRequest {
+public class CreateGroupRequest {
 
     private UUID inventoryId;
 
