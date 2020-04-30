@@ -1,6 +1,6 @@
 package dev.infrastructr.deck.security.mappers;
 
-import dev.infrastructr.deck.data.entities.Role;
+import dev.infrastructr.deck.data.entities.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,13 +25,13 @@ public class UserDetailsMapper {
             .build();
     }
 
-    Collection<? extends GrantedAuthority> map(List<Role> roles){
+    Collection<? extends GrantedAuthority> map(List<UserRole> roles){
         if (isEmpty(roles)) {
             return emptySet();
         }
 
         return roles.stream()
-                .map(Role::name)
+                .map(UserRole::name)
                 .map(SimpleGrantedAuthority::new)
                 .collect(toList());
     }

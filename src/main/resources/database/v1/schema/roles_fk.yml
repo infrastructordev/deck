@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: ml@infrastructr.dev
+      comment: Adds foreign keys to table 'roles'.
+      changes:
+        - addForeignKeyConstraint :
+            baseTableName: roles
+            baseColumnNames: playbook_id
+            constraintName: fk_roles_playbook_id_playbooks_id
+            referencedTableName: playbooks
+            referencedColumnNames: id

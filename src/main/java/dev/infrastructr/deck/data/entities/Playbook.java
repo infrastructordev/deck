@@ -7,8 +7,8 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
-@Table(name = "roles")
-public class Role extends BaseEntity {
+@Table(name = "playbooks")
+public class Playbook extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -16,13 +16,11 @@ public class Role extends BaseEntity {
 
     private String name;
 
-    private String version;
-
     private String description;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "playbook_id")
-    private Playbook playbook;
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public UUID getId() {
         return id;
@@ -40,14 +38,6 @@ public class Role extends BaseEntity {
         this.name = name;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -56,12 +46,11 @@ public class Role extends BaseEntity {
         this.description = description;
     }
 
-    public Playbook getPlaybook() {
-        return playbook;
+    public Project getProject() {
+        return project;
     }
 
-    public void setPlaybook(Playbook playbook) {
-        this.playbook = playbook;
+    public void setProject(Project project) {
+        this.project = project;
     }
-
 }

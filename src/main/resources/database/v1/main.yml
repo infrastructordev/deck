@@ -8,6 +8,10 @@ databaseChangeLog:
   - include:
       file: database/v1/schema/inventories.yml
   - include:
+      file: database/v1/schema/playbooks.yml
+  - include:
+      file: database/v1/schema/roles.yml
+  - include:
       file: database/v1/schema/groups.yml
   - include:
       file: database/v1/schema/providers.yml
@@ -27,6 +31,10 @@ databaseChangeLog:
       file: database/v1/schema/providers_fk.yml
   - include:
       file: database/v1/schema/inventories_fk.yml
+  - include:
+      file: database/v1/schema/playbooks_fk.yml
+  - include:
+      file: database/v1/schema/roles_fk.yml
   - include:
       file: database/v1/schema/groups_fk.yml
   - include:

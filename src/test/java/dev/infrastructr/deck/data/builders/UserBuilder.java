@@ -2,7 +2,7 @@ package dev.infrastructr.deck.data.builders;
 
 import dev.infrastructr.deck.DataFaker;
 import dev.infrastructr.deck.data.entities.Organization;
-import dev.infrastructr.deck.data.entities.Role;
+import dev.infrastructr.deck.data.entities.UserRole;
 import dev.infrastructr.deck.data.entities.User;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class UserBuilder {
 
     private String password = DataFaker.getInstance().crypto().md5();
 
-    private List<Role> roles = singletonList(Role.OWNER);
+    private List<UserRole> roles = singletonList(UserRole.OWNER);
 
     private Organization organization;
 
@@ -47,7 +47,7 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder withRoles(Role ... roles){
+    public UserBuilder withRoles(UserRole... roles){
         this.roles = asList(roles);
         return this;
     }

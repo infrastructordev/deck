@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     private Organization organization;
 
     @Type(type = "jsonb")
-    private List<Role> roles;
+    private List<UserRole> roles;
 
     public UUID getId() {
         return id;
@@ -74,11 +74,11 @@ public class User extends BaseEntity {
         this.organization = organization;
     }
 
-    public List<Role> getRoles() {
+    public List<UserRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<UserRole> roles) {
         this.roles = roles;
     }
 }

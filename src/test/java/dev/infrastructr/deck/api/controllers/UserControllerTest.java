@@ -3,7 +3,7 @@ package dev.infrastructr.deck.api.controllers;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.data.entities.Organization;
-import dev.infrastructr.deck.data.entities.Role;
+import dev.infrastructr.deck.data.entities.UserRole;
 import dev.infrastructr.deck.data.entities.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class UserControllerTest extends WebTestBase {
             .body("roles", is(
                 user.getRoles()
                     .stream()
-                    .map(Role::name)
+                    .map(UserRole::name)
                     .collect(Collectors.toList())));
     }
 }
