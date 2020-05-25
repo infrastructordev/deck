@@ -8,6 +8,10 @@ public class CreateProviderRequest {
 
     private String type;
 
+    private String token;
+
+    private String namespace;
+
     public String getName() {
         return name;
     }
@@ -30,5 +34,21 @@ public class CreateProviderRequest {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

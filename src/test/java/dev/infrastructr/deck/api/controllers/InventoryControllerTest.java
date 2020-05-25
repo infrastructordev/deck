@@ -1,14 +1,13 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.InventoryActions;
 import dev.infrastructr.deck.api.actions.ProjectActions;
-import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.api.entities.Inventory;
 import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateHostRequest;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,26 +20,25 @@ import static org.springframework.http.HttpStatus.OK;
 public class InventoryControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
-
-    @Autowired
     private ProjectActions projectActions;
 
     @Autowired
     private InventoryActions inventoryActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldCreate(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
         CreateHostRequest request = createHostRequest()
             .withInventoryId(project.getId())
             .build();
 
         given(documentationSpec)
             .filter(getDocument("inventory-create"))
-            .cookie(cookie)
+            .cookie(context.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -52,18 +50,19 @@ public class InventoryControllerTest extends WebTestBase {
             .body("id", is(notNullValue()))
             .body("name", is(request.getName()))
             .body("description", is(request.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetByProjectId(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
+        Project project = context.getProjects().get(0);
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-by-project-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}/inventories", project.getId())
@@ -74,18 +73,19 @@ public class InventoryControllerTest extends WebTestBase {
             .body("content[0].id", is(inventory.getId().toString()))
             .body("content[0].name", is(inventory.getName()))
             .body("content[0].description", is(inventory.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetFilteredByProjectId(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
+        Project project = context.getProjects().get(0);
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-filtered"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}/inventories?filter={filter}", project.getId(), inventory.getName())
@@ -96,15 +96,16 @@ public class InventoryControllerTest extends WebTestBase {
             .body("content[0].id", is(inventory.getId().toString()))
             .body("content[0].name", is(inventory.getName()))
             .body("content[0].description", is(inventory.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetOnePerPageSortedByProjectId(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Inventory anotherInventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
+        Inventory inventory = inventoryActions.create(context, project.getId());
+        Inventory anotherInventory = inventoryActions.create(context, project.getId());
         String sort = "name,desc";
         Inventory expectedInventory = inventory.getName().compareTo(anotherInventory.getName()) > 0
             ? inventory
@@ -112,7 +113,7 @@ public class InventoryControllerTest extends WebTestBase {
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-by-project-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}/inventories?page=0&size=1&sort={sort}", project.getId(), sort)
@@ -123,18 +124,18 @@ public class InventoryControllerTest extends WebTestBase {
             .body("content[0].id", is(expectedInventory.getId().toString()))
             .body("content[0].name", is(expectedInventory.getName()))
             .body("content[0].description", is(expectedInventory.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetById(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-by-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/inventories/{inventoryId}", inventory.getId())
@@ -145,5 +146,7 @@ public class InventoryControllerTest extends WebTestBase {
             .body("id", is(inventory.getId().toString()))
             .body("name", is(inventory.getName()))
             .body("description", is(inventory.getDescription()));
+
+        contextCleaner.clean(context);
     }
 }

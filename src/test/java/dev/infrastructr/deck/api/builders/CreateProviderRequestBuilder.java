@@ -12,6 +12,10 @@ public class CreateProviderRequestBuilder {
 
     private String type = ProviderType.GITHUB.name();
 
+    private String token;
+
+    private String namespace;
+
     private CreateProviderRequestBuilder(){
     }
 
@@ -34,11 +38,23 @@ public class CreateProviderRequestBuilder {
         return this;
     }
 
+    public CreateProviderRequestBuilder withToken(String token){
+        this.token = token;
+        return this;
+    }
+
+    public CreateProviderRequestBuilder withNamespace(String namespace){
+        this.namespace = namespace;
+        return this;
+    }
+
     public CreateProviderRequest build(){
         CreateProviderRequest createProviderRequest = new CreateProviderRequest();
         createProviderRequest.setName(name);
         createProviderRequest.setDescription(description);
         createProviderRequest.setType(type);
+        createProviderRequest.setToken(token);
+        createProviderRequest.setNamespace(namespace);
         return createProviderRequest;
     }
 }

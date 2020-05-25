@@ -1,14 +1,14 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.InventoryActions;
 import dev.infrastructr.deck.api.actions.ProjectActions;
 import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.api.entities.Inventory;
 import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateInventoryRequest;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,20 +28,23 @@ public class InventoryControllerAuthorizationTest extends WebTestBase {
     @Autowired
     private InventoryActions inventoryActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldForbidCreateForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
         CreateInventoryRequest request = createInventoryRequest()
             .withProjectId(project.getId())
             .build();
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("inventory-create-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -49,44 +52,52 @@ public class InventoryControllerAuthorizationTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByProjectIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-by-project-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}/inventories", project.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("inventory-get-by-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/inventories/{inventoryId}", inventory.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 }

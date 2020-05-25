@@ -1,10 +1,12 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.Inventory;
 import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.data.entities.User;
 import io.restassured.http.Cookie;
 import org.junit.Test;
@@ -22,45 +24,40 @@ public class HostInitAuthorizationControllerTest extends WebTestBase {
     private UserActions userActions;
 
     @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
     private HostActions hostActions;
-
-    @Autowired
-    private InventoryActions inventoryActions;
 
     @Autowired
     private HostInitActions hostInitActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldForbidCreateInitForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Host host = hostActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("host-init-create-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
         .when()
             .post("/hosts/{hostId}/init", host.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetInitForBadHostToken() {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        hostInitActions.create(context);
+        Host host = context.getHosts().get(0);
 
         given(documentationSpec)
             .filter(getDocument("host-init-get-forbidden"))
@@ -69,5 +66,7 @@ public class HostInitAuthorizationControllerTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
     }
 }

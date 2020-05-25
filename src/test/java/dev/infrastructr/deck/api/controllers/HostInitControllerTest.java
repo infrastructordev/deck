@@ -1,14 +1,12 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.HostInit;
-import dev.infrastructr.deck.api.entities.Inventory;
-import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.services.HostScriptProvider;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class HostInitControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
-
-    @Autowired
-    private ProjectActions projectActions;
+    private ContextCleaner contextCleaner;
 
     @Autowired
     private HostActions hostActions;
@@ -37,22 +32,16 @@ public class HostInitControllerTest extends WebTestBase {
     private HostInitActions hostInitActions;
 
     @Autowired
-    private InventoryActions inventoryActions;
-
-    @Autowired
     private HostScriptProvider hostScriptProvider;
 
     @Test
     public void shouldCreateInit(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Host host = hostActions.create(context);
 
         HostInit hostInit = given(documentationSpec)
             .filter(getDocument("host-init-create"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
         .when()
             .post("/hosts/{hostId}/init", host.getId())
         .then()
@@ -65,16 +54,15 @@ public class HostInitControllerTest extends WebTestBase {
 
         assertThat(hostInit.getCommand(), startsWith("curl -s"));
         assertThat(hostInit.getToken(), notNullValue());
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetInit() throws IOException {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        HostInit hostInit = hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        Host host = hostActions.create(context);
+        HostInit hostInit = hostInitActions.create(context, host.getId());
         String expectedHostInitScript = getExpectedScript(host.getId(), hostInit.getToken());
 
         String hostInitScript = given(documentationSpec)
@@ -90,6 +78,8 @@ public class HostInitControllerTest extends WebTestBase {
             .asString();
 
         assertThat(hostInitScript, is(expectedHostInitScript));
+
+        contextCleaner.clean(context);
     }
 
     private String getExpectedScript(UUID hostId, String hostAccessToken) throws IOException {

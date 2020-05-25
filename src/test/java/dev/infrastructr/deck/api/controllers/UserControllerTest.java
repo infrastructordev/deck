@@ -1,7 +1,9 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.UserActions;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.data.entities.Organization;
 import dev.infrastructr.deck.data.entities.UserRole;
 import dev.infrastructr.deck.data.entities.User;
@@ -19,15 +21,19 @@ public class UserControllerTest extends WebTestBase {
     @Autowired
     private UserActions userActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldReturn(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
+        TestContext context = new TestContext();
+        User user = userActions.create(context);
+        Organization organization = context.getOrganization();
 
         given(documentationSpec)
             .filter(getDocument("user-get-me"))
             .auth().none()
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
         .when()
             .get("/users/me")
         .then()
@@ -43,5 +49,7 @@ public class UserControllerTest extends WebTestBase {
                     .stream()
                     .map(UserRole::name)
                     .collect(Collectors.toList())));
+
+        contextCleaner.clean(context);
     }
 }

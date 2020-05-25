@@ -28,28 +28,24 @@ public class ProjectService {
 
     private final ProjectAuthorizer projectAuthorizer;
 
+    private final ProjectCreator projectCreator;
+
     public ProjectService(
         CurrentUserProvider currentUserProvider,
         ProjectRepository projectRepository,
         ProjectMapper projectMapper,
-        ProjectAuthorizer projectAuthorizer
+        ProjectAuthorizer projectAuthorizer,
+        ProjectCreator projectCreator
     ){
         this.currentUserProvider = currentUserProvider;
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
         this.projectAuthorizer = projectAuthorizer;
+        this.projectCreator = projectCreator;
     }
 
     public Project create(CreateProjectRequest createProjectRequest){
-        User user = currentUserProvider.getCurrentUser();
-
-        dev.infrastructr.deck.data.entities.Project project = new dev.infrastructr.deck.data.entities.Project();
-        project.setAuthor(user);
-        project.setOwner(user.getOrganization());
-        project.setName(createProjectRequest.getName());
-        project.setDescription(createProjectRequest.getDescription());
-
-        return projectMapper.map(projectRepository.save(project));
+        return projectCreator.create(createProjectRequest);
     }
 
     public Page<Project> getAll(Pageable pageable, String filter){
@@ -71,5 +67,4 @@ public class ProjectService {
 
         return projectMapper.map(project);
     }
-
 }

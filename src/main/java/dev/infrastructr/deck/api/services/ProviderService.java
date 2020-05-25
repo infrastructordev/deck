@@ -49,6 +49,8 @@ public class ProviderService {
         provider.setName(createProviderRequest.getName());
         provider.setDescription(createProviderRequest.getDescription());
         provider.setType(ProviderType.valueOf(createProviderRequest.getType()));
+        provider.setToken(createProviderRequest.getToken());
+        provider.setNamespace(createProviderRequest.getNamespace());
 
         return providerMapper.map(providerRepository.save(provider));
     }
@@ -72,5 +74,4 @@ public class ProviderService {
 
         return providerMapper.map(provider);
     }
-
 }

@@ -1,15 +1,12 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
-import dev.infrastructr.deck.api.actions.PlaybookActions;
-import dev.infrastructr.deck.api.actions.ProjectActions;
-import dev.infrastructr.deck.api.actions.RoleActions;
-import dev.infrastructr.deck.api.actions.UserActions;
-import dev.infrastructr.deck.api.builders.CreateRoleRequestBuilder;
+import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Playbook;
 import dev.infrastructr.deck.api.entities.Project;
 import dev.infrastructr.deck.api.entities.Role;
-import dev.infrastructr.deck.api.requests.CreatePlaybookRequest;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateRoleRequest;
 import dev.infrastructr.deck.data.entities.User;
 import io.restassured.http.Cookie;
@@ -27,29 +24,28 @@ public class RoleControllerAuthorizationTest extends WebTestBase {
     private UserActions userActions;
 
     @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
     private PlaybookActions playbookActions;
 
     @Autowired
     private RoleActions roleActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldForbidCreateForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Playbook playbook = playbookActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Playbook playbook = playbookActions.create(context);
         CreateRoleRequest request = createRoleRequest()
             .withPlaybookId(playbook.getId())
             .build();
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("role-create-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -57,46 +53,52 @@ public class RoleControllerAuthorizationTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByProjectIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Playbook playbook = playbookActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Playbook playbook = playbookActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("role-get-by-playbook-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/playbooks/{playbookId}/roles", playbook.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Playbook playbook = playbookActions.create(cookie, project.getId());
-        Role role = roleActions.create(cookie, playbook.getId());
+        TestContext context = new TestContext();
+        Role role = roleActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("role-get-by-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/roles/{roleId}", role.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 }

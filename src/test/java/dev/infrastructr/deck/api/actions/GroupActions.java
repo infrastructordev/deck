@@ -1,8 +1,10 @@
 package dev.infrastructr.deck.api.actions;
 
+import dev.infrastructr.deck.api.entities.Group;
+import dev.infrastructr.deck.api.entities.Inventory;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateGroupRequest;
-import dev.infrastructr.deck.data.entities.Group;
-import io.restassured.http.Cookie;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,11 +15,19 @@ import static io.restassured.RestAssured.given;
 @Service
 public class GroupActions {
 
-    public Group create(Cookie cookie, UUID inventoryId){
+    @Autowired
+    private InventoryActions inventoryActions;
+
+    public Group create(TestContext context){
+        Inventory inventory = inventoryActions.create(context);
+        return create(context, inventory.getId());
+    }
+
+    public Group create(TestContext context, UUID inventoryId){
         CreateGroupRequest request = createGroupRequest().build();
 
-        return given()
-            .cookie(cookie)
+        Group group = given()
+            .cookie(context.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -26,5 +36,9 @@ public class GroupActions {
             .extract()
             .body()
             .as(Group.class);
+
+        context.getGroups().add(group);
+
+        return group;
     }
 }

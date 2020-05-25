@@ -35,3 +35,6 @@ dev:
         request-mapping:
           host-init: /hosts/{0}/init
           host-heartbeat: /hosts/{0}/heartbeat
+      git:
+        key-name: infrastructr-deck-api
+        project-name-prefix: infrastructr-deck-

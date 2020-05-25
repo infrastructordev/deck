@@ -34,6 +34,9 @@ databaseChangeLog:
                   name: type
                   type: text
               - column:
+                  name: namespace
+                  type: text
+              - column:
                   name: owner_id
                   type: uuid
                   constraints:

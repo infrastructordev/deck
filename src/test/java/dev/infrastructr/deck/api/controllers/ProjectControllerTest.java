@@ -1,13 +1,13 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.ProjectActions;
-import dev.infrastructr.deck.api.actions.UserActions;
+import dev.infrastructr.deck.api.actions.ProviderActions;
 import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.entities.Provider;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateProjectRequest;
-import dev.infrastructr.deck.data.entities.Organization;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,25 +15,31 @@ import static dev.infrastructr.deck.api.builders.CreateProjectRequestBuilder.cre
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpStatus.OK;
 
 public class ProjectControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
+    private ProviderActions providerActions;
 
     @Autowired
     private ProjectActions projectActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldCreate(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        CreateProjectRequest request = createProjectRequest().build();
+        TestContext context = new TestContext();
+        Provider provider = providerActions.create(context);
+        CreateProjectRequest request = createProjectRequest()
+            .withProviderId(provider.getId())
+            .build();
 
-        given(documentationSpec)
+        Project project = given(documentationSpec)
             .filter(getDocument("project-create"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -42,25 +48,28 @@ public class ProjectControllerTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .body("id", is(notNullValue()))
-            .body("name", is(request.getName()))
-            .body("description", is(request.getDescription()))
-            .body("author.id", is(user.getId().toString()))
-            .body("author.name", is(user.getName()))
-            .body("owner.id", is(organization.getId().toString()))
-            .body("owner.name", is(organization.getName()));
+            .extract().body().as(Project.class);
+        context.getProjects().add(project);
+
+        assertThat(project.getId(), is(notNullValue()));
+        assertThat(project.getName(), is(request.getName()));
+        assertThat(project.getDescription(), is(request.getDescription()));
+        assertThat(project.getAuthor().getId(), is(context.getUser().getId()));
+        assertThat(project.getAuthor().getName(), is(context.getUser().getName()));
+        assertThat(project.getOwner().getId(), is(context.getOrganization().getId()));
+        assertThat(project.getOwner().getName(), is(context.getOrganization().getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetAll(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("project-get-all"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects")
@@ -71,23 +80,23 @@ public class ProjectControllerTest extends WebTestBase {
             .body("content[0].id", is(project.getId().toString()))
             .body("content[0].name", is(project.getName()))
             .body("content[0].description", is(project.getDescription()))
-            .body("content[0].author.id", is(user.getId().toString()))
-            .body("content[0].author.name", is(user.getName()))
-            .body("content[0].owner.id", is(organization.getId().toString()))
-            .body("content[0].owner.name", is(organization.getName()));
+            .body("content[0].author.id", is(context.getUser().getId().toString()))
+            .body("content[0].author.name", is(context.getUser().getName()))
+            .body("content[0].owner.id", is(context.getOrganization().getId().toString()))
+            .body("content[0].owner.name", is(context.getOrganization().getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetFiltered(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
+        projectActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("project-get-filtered"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects?filter={filter}", project.getName())
@@ -98,19 +107,19 @@ public class ProjectControllerTest extends WebTestBase {
             .body("content[0].id", is(project.getId().toString()))
             .body("content[0].name", is(project.getName()))
             .body("content[0].description", is(project.getDescription()))
-            .body("content[0].author.id", is(user.getId().toString()))
-            .body("content[0].author.name", is(user.getName()))
-            .body("content[0].owner.id", is(organization.getId().toString()))
-            .body("content[0].owner.name", is(organization.getName()));
+            .body("content[0].author.id", is(context.getUser().getId().toString()))
+            .body("content[0].author.name", is(context.getUser().getName()))
+            .body("content[0].owner.id", is(context.getOrganization().getId().toString()))
+            .body("content[0].owner.name", is(context.getOrganization().getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetOnePerPageSorted(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Project anotherProject = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
+        Project anotherProject = projectActions.create(context);
         String sort = "name,desc";
         Project expectedProject = project.getName().compareTo(anotherProject.getName()) > 0
             ? project
@@ -118,7 +127,7 @@ public class ProjectControllerTest extends WebTestBase {
 
         given(documentationSpec)
             .filter(getDocument("project-get-all"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects?page=0&size=1&sort={sort}", sort)
@@ -129,22 +138,22 @@ public class ProjectControllerTest extends WebTestBase {
             .body("content[0].id", is(expectedProject.getId().toString()))
             .body("content[0].name", is(expectedProject.getName()))
             .body("content[0].description", is(expectedProject.getDescription()))
-            .body("content[0].author.id", is(user.getId().toString()))
-            .body("content[0].author.name", is(user.getName()))
-            .body("content[0].owner.id", is(organization.getId().toString()))
-            .body("content[0].owner.name", is(organization.getName()));
+            .body("content[0].author.id", is(context.getUser().getId().toString()))
+            .body("content[0].author.name", is(context.getUser().getName()))
+            .body("content[0].owner.id", is(context.getOrganization().getId().toString()))
+            .body("content[0].owner.name", is(context.getOrganization().getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetById(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("project-get-by-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}", project.getId())
@@ -155,9 +164,11 @@ public class ProjectControllerTest extends WebTestBase {
             .body("id", is(project.getId().toString()))
             .body("name", is(project.getName()))
             .body("description", is(project.getDescription()))
-            .body("author.id", is(user.getId().toString()))
-            .body("author.name", is(user.getName()))
-            .body("owner.id", is(organization.getId().toString()))
-            .body("owner.name", is(organization.getName()));
+            .body("author.id", is(context.getUser().getId().toString()))
+            .body("author.name", is(context.getUser().getName()))
+            .body("owner.id", is(context.getOrganization().getId().toString()))
+            .body("owner.name", is(context.getOrganization().getName()));
+
+        contextCleaner.clean(context);
     }
 }

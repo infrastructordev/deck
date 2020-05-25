@@ -1,16 +1,13 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.HostActions;
 import dev.infrastructr.deck.api.actions.InventoryActions;
-import dev.infrastructr.deck.api.actions.ProjectActions;
-import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.Inventory;
-import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateHostRequest;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,30 +20,25 @@ import static org.springframework.http.HttpStatus.OK;
 public class HostControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
-
-    @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
     private InventoryActions inventoryActions;
 
     @Autowired
     private HostActions hostActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldCreate(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
         CreateHostRequest request = createHostRequest()
             .withInventoryId(inventory.getId())
             .build();
 
         given(documentationSpec)
             .filter(getDocument("host-create"))
-            .cookie(cookie)
+            .cookie(context.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -58,19 +50,19 @@ public class HostControllerTest extends WebTestBase {
             .body("id", is(notNullValue()))
             .body("name", is(request.getName()))
             .body("description", is(request.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetByInventoryId(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Host host = hostActions.create(context);
+        Inventory inventory = context.getInventories().get(0);
 
         given(documentationSpec)
             .filter(getDocument("host-get-by-inventory-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/inventories/{inventoryId}/hosts", inventory.getId())
@@ -81,16 +73,16 @@ public class HostControllerTest extends WebTestBase {
             .body("content[0].id", is(host.getId().toString()))
             .body("content[0].name", is(host.getName()))
             .body("content[0].description", is(host.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetOnePerPageSortedByProjectId(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        Host anotherHost = hostActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
+        Host host = hostActions.create(context, inventory.getId());
+        Host anotherHost = hostActions.create(context, inventory.getId());
         String sort = "name,desc";
         Host expectedHost = host.getName().compareTo(anotherHost.getName()) > 0
             ? host
@@ -98,7 +90,7 @@ public class HostControllerTest extends WebTestBase {
 
         given(documentationSpec)
             .filter(getDocument("host-get-by-inventory-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/inventories/{inventoryId}/hosts?page=0&size=1&sort={sort}", inventory.getId(), sort)
@@ -109,19 +101,18 @@ public class HostControllerTest extends WebTestBase {
             .body("content[0].id", is(expectedHost.getId().toString()))
             .body("content[0].name", is(expectedHost.getName()))
             .body("content[0].description", is(expectedHost.getDescription()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetById(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Host host = hostActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("host-get-by-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/hosts/{hostId}", host.getId())
@@ -132,5 +123,7 @@ public class HostControllerTest extends WebTestBase {
             .body("id", is(host.getId().toString()))
             .body("name", is(host.getName()))
             .body("description", is(host.getDescription()));
+
+        contextCleaner.clean(context);
     }
 }

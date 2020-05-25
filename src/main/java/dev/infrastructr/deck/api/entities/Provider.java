@@ -12,6 +12,8 @@ public class Provider extends BaseEntity {
 
     private String type;
 
+    private String namespace;
+
     private Reference owner;
 
     public UUID getId() {
@@ -52,5 +54,13 @@ public class Provider extends BaseEntity {
 
     public void setOwner(Reference owner) {
         this.owner = owner;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

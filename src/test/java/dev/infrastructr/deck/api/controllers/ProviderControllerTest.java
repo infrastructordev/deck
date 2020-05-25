@@ -1,13 +1,14 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.ProviderActions;
 import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.api.entities.Provider;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateProviderRequest;
 import dev.infrastructr.deck.data.entities.Organization;
 import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,15 +26,19 @@ public class ProviderControllerTest extends WebTestBase {
     @Autowired
     private ProviderActions providerActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldCreate(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
+        TestContext context = new TestContext();
+        userActions.create(context);
+        Organization organization = context.getOrganization();
         CreateProviderRequest request = createProviderRequest().build();
 
         given(documentationSpec)
             .filter(getDocument("provider-create"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -48,18 +53,19 @@ public class ProviderControllerTest extends WebTestBase {
             .body("type", is(request.getType()))
             .body("owner.id", is(organization.getId().toString()))
             .body("owner.name", is(organization.getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetAll(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Provider provider = providerActions.create(cookie);
+        TestContext context = new TestContext();
+        Provider provider = providerActions.create(context);
+        Organization organization = context.getOrganization();
 
         given(documentationSpec)
             .filter(getDocument("provider-get-all"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/providers")
@@ -73,19 +79,21 @@ public class ProviderControllerTest extends WebTestBase {
             .body("content[0].type", is(provider.getType()))
             .body("content[0].owner.id", is(organization.getId().toString()))
             .body("content[0].owner.name", is(organization.getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetFiltered(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Provider provider = providerActions.create(cookie);
-        providerActions.create(cookie);
+        TestContext context = new TestContext();
+        userActions.create(context);
+        Organization organization = context.getOrganization();
+        Provider provider = providerActions.create(context);
+        providerActions.create(context);
 
         given(documentationSpec)
             .filter(getDocument("provider-get-filtered"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/providers?filter={filter}", provider.getName())
@@ -99,15 +107,17 @@ public class ProviderControllerTest extends WebTestBase {
             .body("content[0].type", is(provider.getType()))
             .body("content[0].owner.id", is(organization.getId().toString()))
             .body("content[0].owner.name", is(organization.getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetOnePerPageSorted(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Provider provider = providerActions.create(cookie);
-        Provider anotherProvider = providerActions.create(cookie);
+        TestContext context = new TestContext();
+        userActions.create(context);
+        Organization organization = context.getOrganization();
+        Provider provider = providerActions.create(context);
+        Provider anotherProvider = providerActions.create(context);
         String sort = "name,desc";
         Provider expectedProvider = provider.getName().compareTo(anotherProvider.getName()) > 0
             ? provider
@@ -115,7 +125,7 @@ public class ProviderControllerTest extends WebTestBase {
 
         given(documentationSpec)
             .filter(getDocument("provider-get-all"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/providers?page=0&size=1&sort={sort}", sort)
@@ -129,18 +139,19 @@ public class ProviderControllerTest extends WebTestBase {
             .body("content[0].type", is(expectedProvider.getType()))
             .body("content[0].owner.id", is(organization.getId().toString()))
             .body("content[0].owner.name", is(organization.getName()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldGetById(){
-        User user = userActions.create();
-        Organization organization = user.getOrganization();
-        Cookie cookie = userActions.authenticate(user);
-        Provider provider = providerActions.create(cookie);
+        TestContext context = new TestContext();
+        Provider provider = providerActions.create(context);
+        Organization organization = context.getOrganization();
 
         given(documentationSpec)
             .filter(getDocument("provider-get-by-id"))
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
             .contentType("application/json")
         .when()
             .get("/providers/{providerId}", provider.getId())
@@ -154,5 +165,7 @@ public class ProviderControllerTest extends WebTestBase {
             .body("type", is(provider.getType()))
             .body("owner.id", is(organization.getId().toString()))
             .body("owner.name", is(organization.getName()));
+
+        contextCleaner.clean(context);
     }
 }

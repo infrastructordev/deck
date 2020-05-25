@@ -1,16 +1,14 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Host;
 import dev.infrastructr.deck.api.entities.HostInit;
-import dev.infrastructr.deck.api.entities.Inventory;
-import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.services.HostScriptProvider;
 import dev.infrastructr.deck.data.entities.HostHeartbeat;
-import dev.infrastructr.deck.data.entities.User;
 import dev.infrastructr.deck.data.repositories.HostHeartbeatRepository;
-import io.restassured.http.Cookie;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +28,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class HostHeartbeatControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
-
-    @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
-    private InventoryActions inventoryActions;
-
-    @Autowired
-    private HostActions hostActions;
-
-    @Autowired
     private HostInitActions hostInitActions;
 
     @Autowired
@@ -50,14 +36,14 @@ public class HostHeartbeatControllerTest extends WebTestBase {
     @Autowired
     private HostScriptProvider hostScriptProvider;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldGetHeartbeat() throws IOException {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        HostInit hostInit = hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        HostInit hostInit = hostInitActions.create(context);
+        Host host = context.getHosts().get(0);
         String expectedHostHeartbeatScript = getExpectedScript(host.getId(), hostInit.getToken());
 
         String hostHeartbeatScript = given(documentationSpec)
@@ -73,16 +59,15 @@ public class HostHeartbeatControllerTest extends WebTestBase {
             .asString();
 
         assertThat(hostHeartbeatScript, is(expectedHostHeartbeatScript));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldUpdateHeartbeat() {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        HostInit hostInit = hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        HostInit hostInit = hostInitActions.create(context);
+        Host host = context.getHosts().get(0);
         Map<String, Object> expectedHostHeartbeat = singletonMap("foo", "bar");
 
         given(documentationSpec)
@@ -97,6 +82,8 @@ public class HostHeartbeatControllerTest extends WebTestBase {
 
         HostHeartbeat hostHeartbeat = hostHeartbeatRepository.findByHostId(host.getId()).orElseThrow();
         assertEquals(hostHeartbeat.getValue(), expectedHostHeartbeat);
+
+        contextCleaner.clean(context);
     }
 
     private String getExpectedScript(UUID hostId, String hostAccessToken) throws IOException {

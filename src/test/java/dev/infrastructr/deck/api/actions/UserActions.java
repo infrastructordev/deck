@@ -1,5 +1,6 @@
 package dev.infrastructr.deck.api.actions;
 
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.data.TransactionalEntityManager;
 import dev.infrastructr.deck.data.builders.UserBuilder;
 import dev.infrastructr.deck.data.entities.Organization;
@@ -20,30 +21,39 @@ public class UserActions {
     public static final String PASSWORD = "123456";
 
     @Value("${dev.infrastructr.deck.security.remember-me.cookie}")
-    protected String cookie;
+    protected String cookieName;
 
     @Autowired
     protected TransactionalEntityManager entityManager;
 
-    public User create(){
-        return create(PASSWORD);
+    public User create(TestContext context){
+        return create(context, PASSWORD);
     }
 
-    public User create(String password){
-        return create(password, true);
+    public User create(TestContext context, String password){
+        return create(context, password, true);
     }
 
-    public User create(String password, boolean enabled){
+    public User create(TestContext context, String password, boolean enabled){
         Organization organization = entityManager.persist(organization().build());
-        return entityManager.persist(UserBuilder.user()
+        User user = entityManager.persist(UserBuilder.user()
             .withOrganization(organization)
             .withEnabled(enabled)
             .withPassword(password)
             .build());
+
+        context.setOrganization(organization);
+        context.setUser(user);
+
+        authenticate(context);
+
+        return user;
     }
 
-    public Cookie authenticate(User user){
-        return given()
+    private void authenticate(TestContext context){
+        User user = context.getUser();
+
+        Cookie cookie = given()
             .auth().none()
             .formParam("username", user.getName())
             .formParam("password", PASSWORD)
@@ -51,10 +61,12 @@ public class UserActions {
             .post("/users/login")
             .then()
             .extract()
-            .detailedCookie(cookie);
+            .detailedCookie(cookieName);
+
+        context.setCookie(cookie);
     }
 
-    public String getCookie() {
-        return cookie;
+    public String getCookieName() {
+        return cookieName;
     }
 }

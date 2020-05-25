@@ -1,12 +1,10 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.*;
 import dev.infrastructr.deck.api.entities.Host;
-import dev.infrastructr.deck.api.entities.Inventory;
-import dev.infrastructr.deck.api.entities.Project;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
+import dev.infrastructr.deck.api.models.TestContext;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,28 +18,16 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class HostHeartbeatAuthorizationControllerTest extends WebTestBase {
 
     @Autowired
-    private UserActions userActions;
-
-    @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
-    private InventoryActions inventoryActions;
-
-    @Autowired
-    private HostActions hostActions;
-
-    @Autowired
     private HostInitActions hostInitActions;
+
+    @Autowired
+    private ContextCleaner contextCleaner;
 
     @Test
     public void shouldForbidGetHeartbeatForBadHostToken() {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        hostInitActions.create(context);
+        Host host = context.getHosts().get(0);
 
         given(documentationSpec)
             .filter(getDocument("host-heartbeat-get-forbidden"))
@@ -50,16 +36,15 @@ public class HostHeartbeatAuthorizationControllerTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
     }
 
     @Test
     public void shouldForbidUpdateHeartbeatForBadHostToken() {
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Host host = hostActions.create(cookie, inventory.getId());
-        hostInitActions.create(cookie, host.getId());
+        TestContext context = new TestContext();
+        hostInitActions.create(context);
+        Host host = context.getHosts().get(0);
 
         given(documentationSpec)
             .filter(getDocument("host-heartbeat-create-forbidden"))
@@ -70,5 +55,7 @@ public class HostHeartbeatAuthorizationControllerTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
     }
 }

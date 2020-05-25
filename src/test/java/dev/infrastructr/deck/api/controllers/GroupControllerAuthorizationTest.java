@@ -1,16 +1,14 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.GroupActions;
 import dev.infrastructr.deck.api.actions.InventoryActions;
-import dev.infrastructr.deck.api.actions.ProjectActions;
 import dev.infrastructr.deck.api.actions.UserActions;
+import dev.infrastructr.deck.api.entities.Group;
 import dev.infrastructr.deck.api.entities.Inventory;
-import dev.infrastructr.deck.api.entities.Project;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.api.requests.CreateGroupRequest;
-import dev.infrastructr.deck.data.entities.Group;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,29 +23,28 @@ public class GroupControllerAuthorizationTest extends WebTestBase {
     private UserActions userActions;
 
     @Autowired
-    private ProjectActions projectActions;
-
-    @Autowired
     private InventoryActions inventoryActions;
 
     @Autowired
     private GroupActions groupActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldForbidCreateForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
         CreateGroupRequest request = createGroupRequest()
             .withInventoryId(inventory.getId())
             .build();
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("groups-create-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .body(request)
             .contentType("application/json")
         .when()
@@ -55,46 +52,52 @@ public class GroupControllerAuthorizationTest extends WebTestBase {
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByInventoryIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
+        TestContext context = new TestContext();
+        Inventory inventory = inventoryActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("group-get-by-inventory-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/inventories/{inventoryId}/groups", inventory.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
-        Inventory inventory = inventoryActions.create(cookie, project.getId());
-        Group group = groupActions.create(cookie, inventory.getId());
+        TestContext context = new TestContext();
+        Group group = groupActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("group-get-by-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/groups/{groupId}", group.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 }

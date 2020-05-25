@@ -16,3 +16,9 @@ databaseChangeLog:
             constraintName: fk_projects_author_id_users_id
             referencedTableName: users
             referencedColumnNames: id
+        - addForeignKeyConstraint :
+            baseTableName: projects
+            baseColumnNames: provider_id
+            constraintName: fk_projects_provider_id_providers_id
+            referencedTableName: providers
+            referencedColumnNames: id

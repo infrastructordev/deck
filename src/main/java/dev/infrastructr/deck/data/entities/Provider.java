@@ -21,6 +21,8 @@ public class Provider extends BaseEntity {
 
     private String token;
 
+    private String namespace;
+
     @Enumerated(EnumType.STRING)
     private ProviderType type;
 
@@ -74,5 +76,13 @@ public class Provider extends BaseEntity {
 
     public void setOwner(Organization owner) {
         this.owner = owner;
+    }
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
     }
 }

@@ -1,11 +1,11 @@
 package dev.infrastructr.deck.api.controllers;
 
+import dev.infrastructr.deck.ContextCleaner;
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.ProjectActions;
 import dev.infrastructr.deck.api.actions.UserActions;
 import dev.infrastructr.deck.api.entities.Project;
-import dev.infrastructr.deck.data.entities.User;
-import io.restassured.http.Cookie;
+import dev.infrastructr.deck.api.models.TestContext;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,15 +22,19 @@ public class ProjectControllerAuthorizationTest extends WebTestBase {
     @Autowired
     private ProjectActions projectActions;
 
+    @Autowired
+    private ContextCleaner contextCleaner;
+
     @Test
     public void shouldNotGetAllForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        projectActions.create(userActions.authenticate(user));
+        TestContext context = new TestContext();
+        projectActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects")
@@ -39,24 +43,30 @@ public class ProjectControllerAuthorizationTest extends WebTestBase {
             .statusCode(is(OK.value()))
             .and()
             .body("content.$", hasSize(0));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 
     @Test
     public void shouldForbidGetByIdForUserFromDifferentOrganization(){
-        User user = userActions.create();
-        Cookie cookie = userActions.authenticate(user);
-        Project project = projectActions.create(cookie);
+        TestContext context = new TestContext();
+        Project project = projectActions.create(context);
 
-        User userFromDifferentOrganization = userActions.create();
+        TestContext anotherContext = new TestContext();
+        userActions.create(anotherContext);
 
         given(documentationSpec)
             .filter(getDocument("project-get-by-id-forbidden"))
-            .cookie(userActions.authenticate(userFromDifferentOrganization))
+            .cookie(anotherContext.getCookie())
             .contentType("application/json")
         .when()
             .get("/projects/{projectId}", project.getId())
         .then()
             .assertThat()
             .statusCode(is(FORBIDDEN.value()));
+
+        contextCleaner.clean(context);
+        contextCleaner.clean(anotherContext);
     }
 }

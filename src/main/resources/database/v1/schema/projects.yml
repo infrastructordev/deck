@@ -28,12 +28,23 @@ databaseChangeLog:
                   name: description
                   type: text
               - column:
+                  name: key_pair
+                  type: jsonb
+              - column:
+                  name: repository
+                  type: jsonb
+              - column:
                   name: owner_id
                   type: uuid
                   constraints:
                     nullable: false
               - column:
                   name: author_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provider_id
                   type: uuid
                   constraints:
                     nullable: false

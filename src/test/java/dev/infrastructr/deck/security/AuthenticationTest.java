@@ -2,7 +2,9 @@ package dev.infrastructr.deck.security;
 
 import dev.infrastructr.deck.WebTestBase;
 import dev.infrastructr.deck.api.actions.UserActions;
+import dev.infrastructr.deck.api.models.TestContext;
 import dev.infrastructr.deck.data.entities.User;
+import liquibase.pro.packaged.T;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +22,7 @@ public class AuthenticationTest extends WebTestBase {
 
     @Test
     public void shouldAuthenticateWithProperCredentials(){
-        User user = userActions.create(PASSWORD);
+        User user = userActions.create(new TestContext(), PASSWORD);
 
         given(documentationSpec)
             .filter(getDocument("user-login"))
@@ -33,12 +35,12 @@ public class AuthenticationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(OK.value()))
             .and()
-            .cookie(userActions.getCookie(), not(emptyOrNullString()));
+            .cookie(userActions.getCookieName(), not(emptyOrNullString()));
     }
 
     @Test
     public void shouldNotAuthenticateWithBadPassword(){
-        User user = userActions.create(PASSWORD);
+        User user = userActions.create(new TestContext(), PASSWORD);
 
         given(documentationSpec)
             .auth().none()
@@ -50,40 +52,41 @@ public class AuthenticationTest extends WebTestBase {
             .assertThat()
             .statusCode(is(UNAUTHORIZED.value()))
             .and()
-            .cookie(userActions.getCookie(), emptyOrNullString());
+            .cookie(userActions.getCookieName(), emptyOrNullString());
     }
 
     @Test
     public void shouldNotAuthenticateDisabled(){
-        User user = userActions.create(PASSWORD, ACCOUNT_DISABLED);
+        User user = userActions.create(new TestContext(), PASSWORD, ACCOUNT_DISABLED);
 
         given(documentationSpec)
             .filter(getDocument("user-login-unauthorized"))
             .auth().none()
             .formParam("username", user.getName())
             .formParam("password", "secret")
-            .when()
+        .when()
             .post("/users/login")
-            .then()
+        .then()
             .assertThat()
             .statusCode(is(UNAUTHORIZED.value()))
             .and()
-            .cookie(userActions.getCookie(), emptyOrNullString());
+            .cookie(userActions.getCookieName(), emptyOrNullString());
     }
 
     @Test
     public void shouldLogout(){
-        User user = userActions.create(PASSWORD);
+        TestContext context = new TestContext();
+        userActions.create(context, PASSWORD);
 
         given(documentationSpec)
             .filter(getDocument("user-logout"))
             .auth().none()
-            .cookie(userActions.authenticate(user))
+            .cookie(context.getCookie())
         .when()
             .post("/users/logout")
         .then()
             .statusCode(is(OK.value()))
             .and()
-            .cookie(userActions.getCookie(), emptyOrNullString());
+            .cookie(userActions.getCookieName(), emptyOrNullString());
     }
 }
